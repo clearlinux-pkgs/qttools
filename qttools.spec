@@ -4,7 +4,7 @@
 #
 Name     : qttools
 Version  : 5.10.1
-Release  : 3
+Release  : 4
 URL      : http://download.qt.io/official_releases/qt/5.10/5.10.1/submodules/qttools-everywhere-src-5.10.1.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.10/5.10.1/submodules/qttools-everywhere-src-5.10.1.tar.xz
 Summary  : No detailed summary available
@@ -62,6 +62,14 @@ Provides: qttools-devel
 dev components for the qttools package.
 
 
+%package extras
+Summary: extras components for the qttools package.
+Group: Default
+
+%description extras
+extras components for the qttools package.
+
+
 %package lib
 Summary: lib components for the qttools package.
 Group: Libraries
@@ -92,23 +100,23 @@ make INSTALL_ROOT=%{buildroot} install
 
 %files bin
 %defattr(-,root,root,-)
+%exclude /usr/bin/designer
+%exclude /usr/bin/lconvert
+%exclude /usr/bin/linguist
+%exclude /usr/bin/lrelease
+%exclude /usr/bin/lupdate
+%exclude /usr/bin/pixeltool
+%exclude /usr/bin/qcollectiongenerator
+%exclude /usr/bin/qhelpconverter
+%exclude /usr/bin/qhelpgenerator
+%exclude /usr/bin/qtattributionsscanner
+%exclude /usr/bin/qtplugininfo
 /usr/bin/assistant
-/usr/bin/designer
-/usr/bin/lconvert
-/usr/bin/linguist
-/usr/bin/lrelease
-/usr/bin/lupdate
-/usr/bin/pixeltool
-/usr/bin/qcollectiongenerator
 /usr/bin/qdbus
 /usr/bin/qdbusviewer
 /usr/bin/qdoc
-/usr/bin/qhelpconverter
-/usr/bin/qhelpgenerator
-/usr/bin/qtattributionsscanner
 /usr/bin/qtdiag
 /usr/bin/qtpaths
-/usr/bin/qtplugininfo
 
 %files data
 %defattr(-,root,root,-)
@@ -391,6 +399,20 @@ make INSTALL_ROOT=%{buildroot} install
 /usr/lib64/qt5/mkspecs/modules/qt_lib_uiplugin.pri
 /usr/lib64/qt5/mkspecs/modules/qt_lib_uitools.pri
 /usr/lib64/qt5/mkspecs/modules/qt_lib_uitools_private.pri
+
+%files extras
+%defattr(-,root,root,-)
+/usr/bin/designer
+/usr/bin/lconvert
+/usr/bin/linguist
+/usr/bin/lrelease
+/usr/bin/lupdate
+/usr/bin/pixeltool
+/usr/bin/qcollectiongenerator
+/usr/bin/qhelpconverter
+/usr/bin/qhelpgenerator
+/usr/bin/qtattributionsscanner
+/usr/bin/qtplugininfo
 
 %files lib
 %defattr(-,root,root,-)
