@@ -4,7 +4,7 @@
 #
 Name     : qttools
 Version  : 5.10.1
-Release  : 5
+Release  : 6
 URL      : http://download.qt.io/official_releases/qt/5.10/5.10.1/submodules/qttools-everywhere-src-5.10.1.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.10/5.10.1/submodules/qttools-everywhere-src-5.10.1.tar.xz
 Summary  : No detailed summary available
@@ -27,6 +27,7 @@ BuildRequires : pkgconfig(Qt5Test)
 BuildRequires : pkgconfig(Qt5Widgets)
 BuildRequires : pkgconfig(Qt5Xml)
 BuildRequires : qtbase-dev
+BuildRequires : qtbase-extras
 
 %description
 Support for interactive help is provided by the Qt Assistant application.
