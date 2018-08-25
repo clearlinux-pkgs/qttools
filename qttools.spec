@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qttools
 Version  : 5.11.1
-Release  : 9
+Release  : 10
 URL      : http://download.qt.io/official_releases/qt/5.11/5.11.1/submodules/qttools-everywhere-src-5.11.1.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.11/5.11.1/submodules/qttools-everywhere-src-5.11.1.tar.xz
 Summary  : No detailed summary available
@@ -29,6 +29,7 @@ BuildRequires : pkgconfig(Qt5Sql)
 BuildRequires : pkgconfig(Qt5Test)
 BuildRequires : pkgconfig(Qt5Widgets)
 BuildRequires : pkgconfig(Qt5Xml)
+BuildRequires : vulkan-sdk-dev
 
 %description
 Qt Designer is a capable graphical user interface designer that lets you
@@ -65,14 +66,6 @@ Provides: qttools-devel
 dev components for the qttools package.
 
 
-%package extras
-Summary: extras components for the qttools package.
-Group: Default
-
-%description extras
-extras components for the qttools package.
-
-
 %package lib
 Summary: lib components for the qttools package.
 Group: Libraries
@@ -104,13 +97,13 @@ test -r config.log && cat config.log
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1532444169
+export SOURCE_DATE_EPOCH=1535156120
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/qttools
+cp LICENSE.FDL %{buildroot}/usr/share/doc/qttools/LICENSE.FDL
+cp LICENSE.GPL2 %{buildroot}/usr/share/doc/qttools/LICENSE.GPL2
 cp LICENSE.GPL3 %{buildroot}/usr/share/doc/qttools/LICENSE.GPL3
 cp LICENSE.GPL3-EXCEPT %{buildroot}/usr/share/doc/qttools/LICENSE.GPL3-EXCEPT
-cp LICENSE.GPL2 %{buildroot}/usr/share/doc/qttools/LICENSE.GPL2
-cp LICENSE.FDL %{buildroot}/usr/share/doc/qttools/LICENSE.FDL
 cp LICENSE.LGPL3 %{buildroot}/usr/share/doc/qttools/LICENSE.LGPL3
 cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/doc/qttools/tests_manual_qtattributionsscanner_data_LICENSE
 %make_install
@@ -120,17 +113,6 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/doc/qt
 
 %files bin
 %defattr(-,root,root,-)
-%exclude /usr/bin/designer
-%exclude /usr/bin/lconvert
-%exclude /usr/bin/linguist
-%exclude /usr/bin/lrelease
-%exclude /usr/bin/lupdate
-%exclude /usr/bin/pixeltool
-%exclude /usr/bin/qcollectiongenerator
-%exclude /usr/bin/qhelpconverter
-%exclude /usr/bin/qhelpgenerator
-%exclude /usr/bin/qtattributionsscanner
-%exclude /usr/bin/qtplugininfo
 /usr/bin/assistant
 /usr/bin/qdbus
 /usr/bin/qdbusviewer
@@ -155,6 +137,17 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/doc/qt
 
 %files dev
 %defattr(-,root,root,-)
+/usr/bin/designer
+/usr/bin/lconvert
+/usr/bin/linguist
+/usr/bin/lrelease
+/usr/bin/lupdate
+/usr/bin/pixeltool
+/usr/bin/qcollectiongenerator
+/usr/bin/qhelpconverter
+/usr/bin/qhelpgenerator
+/usr/bin/qtattributionsscanner
+/usr/bin/qtplugininfo
 /usr/include/qt5/QtDesigner/5.11.1/QtDesigner/private/abstractdialoggui_p.h
 /usr/include/qt5/QtDesigner/5.11.1/QtDesigner/private/abstractintrospection_p.h
 /usr/include/qt5/QtDesigner/5.11.1/QtDesigner/private/actioneditor_p.h
@@ -382,7 +375,6 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/doc/qt
 /usr/include/qt5/QtUiTools/QtUiToolsVersion
 /usr/include/qt5/QtUiTools/qtuitoolsversion.h
 /usr/include/qt5/QtUiTools/quiloader.h
-/usr/lib64/*.a
 /usr/lib64/cmake/Qt5Designer/Qt5DesignerConfig.cmake
 /usr/lib64/cmake/Qt5Designer/Qt5DesignerConfigVersion.cmake
 /usr/lib64/cmake/Qt5Designer/Qt5Designer_QQuickWidgetPlugin.cmake
@@ -402,6 +394,7 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/doc/qt
 /usr/lib64/libQt5DesignerComponents.so
 /usr/lib64/libQt5Help.prl
 /usr/lib64/libQt5Help.so
+/usr/lib64/libQt5UiTools.a
 /usr/lib64/libQt5UiTools.prl
 /usr/lib64/pkgconfig/Qt5Designer.pc
 /usr/lib64/pkgconfig/Qt5Help.pc
@@ -414,20 +407,6 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/doc/qt
 /usr/lib64/qt5/mkspecs/modules/qt_lib_uiplugin.pri
 /usr/lib64/qt5/mkspecs/modules/qt_lib_uitools.pri
 /usr/lib64/qt5/mkspecs/modules/qt_lib_uitools_private.pri
-
-%files extras
-%defattr(-,root,root,-)
-/usr/bin/designer
-/usr/bin/lconvert
-/usr/bin/linguist
-/usr/bin/lrelease
-/usr/bin/lupdate
-/usr/bin/pixeltool
-/usr/bin/qcollectiongenerator
-/usr/bin/qhelpconverter
-/usr/bin/qhelpgenerator
-/usr/bin/qtattributionsscanner
-/usr/bin/qtplugininfo
 
 %files lib
 %defattr(-,root,root,-)
