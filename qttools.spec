@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qttools
 Version  : 5.11.2
-Release  : 11
+Release  : 12
 URL      : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qttools-everywhere-src-5.11.2.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qttools-everywhere-src-5.11.2.tar.xz
 Summary  : No detailed summary available
@@ -29,7 +29,6 @@ BuildRequires : pkgconfig(Qt5Sql)
 BuildRequires : pkgconfig(Qt5Test)
 BuildRequires : pkgconfig(Qt5Widgets)
 BuildRequires : pkgconfig(Qt5Xml)
-BuildRequires : qttools-dev
 BuildRequires : vulkan-sdk-dev
 
 %description
@@ -40,8 +39,8 @@ Qt Designer can be compiled into an application or created at run-time.
 %package bin
 Summary: bin components for the qttools package.
 Group: Binaries
-Requires: qttools-data
-Requires: qttools-license
+Requires: qttools-data = %{version}-%{release}
+Requires: qttools-license = %{version}-%{release}
 
 %description bin
 bin components for the qttools package.
@@ -58,10 +57,10 @@ data components for the qttools package.
 %package dev
 Summary: dev components for the qttools package.
 Group: Development
-Requires: qttools-lib
-Requires: qttools-bin
-Requires: qttools-data
-Provides: qttools-devel
+Requires: qttools-lib = %{version}-%{release}
+Requires: qttools-bin = %{version}-%{release}
+Requires: qttools-data = %{version}-%{release}
+Provides: qttools-devel = %{version}-%{release}
 
 %description dev
 dev components for the qttools package.
@@ -70,8 +69,8 @@ dev components for the qttools package.
 %package lib
 Summary: lib components for the qttools package.
 Group: Libraries
-Requires: qttools-data
-Requires: qttools-license
+Requires: qttools-data = %{version}-%{release}
+Requires: qttools-license = %{version}-%{release}
 
 %description lib
 lib components for the qttools package.
@@ -98,7 +97,7 @@ test -r config.log && cat config.log
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1537302146
+export SOURCE_DATE_EPOCH=1537305932
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/qttools
 cp LICENSE.FDL %{buildroot}/usr/share/doc/qttools/LICENSE.FDL
@@ -114,22 +113,22 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/doc/qt
 
 %files bin
 %defattr(-,root,root,-)
+%exclude /usr/bin/designer
+%exclude /usr/bin/lconvert
+%exclude /usr/bin/linguist
+%exclude /usr/bin/lrelease
+%exclude /usr/bin/lupdate
+%exclude /usr/bin/pixeltool
+%exclude /usr/bin/qcollectiongenerator
+%exclude /usr/bin/qhelpconverter
+%exclude /usr/bin/qhelpgenerator
+%exclude /usr/bin/qtattributionsscanner
+%exclude /usr/bin/qtplugininfo
 /usr/bin/assistant
-/usr/bin/designer
-/usr/bin/lconvert
-/usr/bin/linguist
-/usr/bin/lrelease
-/usr/bin/lupdate
-/usr/bin/pixeltool
-/usr/bin/qcollectiongenerator
 /usr/bin/qdbus
 /usr/bin/qdbusviewer
-/usr/bin/qhelpconverter
-/usr/bin/qhelpgenerator
-/usr/bin/qtattributionsscanner
 /usr/bin/qtdiag
 /usr/bin/qtpaths
-/usr/bin/qtplugininfo
 
 %files data
 %defattr(-,root,root,-)
@@ -149,6 +148,17 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/doc/qt
 
 %files dev
 %defattr(-,root,root,-)
+/usr/bin/designer
+/usr/bin/lconvert
+/usr/bin/linguist
+/usr/bin/lrelease
+/usr/bin/lupdate
+/usr/bin/pixeltool
+/usr/bin/qcollectiongenerator
+/usr/bin/qhelpconverter
+/usr/bin/qhelpgenerator
+/usr/bin/qtattributionsscanner
+/usr/bin/qtplugininfo
 /usr/include/qt5/QtDesigner/5.11.2/QtDesigner/private/abstractdialoggui_p.h
 /usr/include/qt5/QtDesigner/5.11.2/QtDesigner/private/abstractintrospection_p.h
 /usr/include/qt5/QtDesigner/5.11.2/QtDesigner/private/actioneditor_p.h
