@@ -1,4 +1,6 @@
 # This file contains additional build requirements that did not get
 # picked up automatically. One name per line, no whitespace.
 mesa-dev
-vulkan-sdk-dev
+Vulkan-Headers-dev
+Vulkan-Loader-dev
+Vulkan-Tools

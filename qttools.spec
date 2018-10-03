@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qttools
 Version  : 5.11.2
-Release  : 12
+Release  : 13
 URL      : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qttools-everywhere-src-5.11.2.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.11/5.11.2/submodules/qttools-everywhere-src-5.11.2.tar.xz
 Summary  : No detailed summary available
@@ -29,7 +29,9 @@ BuildRequires : pkgconfig(Qt5Sql)
 BuildRequires : pkgconfig(Qt5Test)
 BuildRequires : pkgconfig(Qt5Widgets)
 BuildRequires : pkgconfig(Qt5Xml)
-BuildRequires : vulkan-sdk-dev
+BuildRequires : Vulkan-Headers-dev
+BuildRequires : Vulkan-Loader-dev
+BuildRequires : Vulkan-Tools
 
 %description
 Qt Designer is a capable graphical user interface designer that lets you
