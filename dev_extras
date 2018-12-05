@@ -4,8 +4,8 @@
 /usr/bin/lrelease
 /usr/bin/lupdate
 /usr/bin/pixeltool
-/usr/bin/qcollectiongenerator
-/usr/bin/qhelpconverter
+/usr/bin/qdistancefieldgenerator
+/usr/bin/qdoc
 /usr/bin/qhelpgenerator
 /usr/bin/qtattributionsscanner
 /usr/bin/qtplugininfo
