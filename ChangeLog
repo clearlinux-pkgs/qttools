@@ -1,8 +1,10 @@
-Qt 5.12 introduces many new features and improvements as well as bugfixes
-over the 5.11.x series. For more details, refer to the online documentation
-included in this distribution. The documentation is also available online:
+Qt 5.12.1 is a bug-fix release. It maintains both forward and backward
+compatibility (source and binary) with Qt 5.12.0.
 
-https://doc.qt.io/qt-5/index.html
+For more details, refer to the online documentation included in this
+distribution. The documentation is also available online:
+
+http://doc.qt.io/qt-5/index.html
 
 The Qt version 5.12 series is binary compatible with the 5.11.x series.
 Applications compiled for 5.11 will continue to run with 5.12.
@@ -16,45 +18,42 @@ Each of these identifiers can be entered in the bug tracker to obtain more
 information about a particular change.
 
 ****************************************************************************
-*                               macdeployqt                                *
+*                                   qdoc                                   *
 ****************************************************************************
 
- - [QTBUG-68823] Now deploys plugins when Qt is configured with
-   -no-framework
+ - [QTBUG-69484] Fixed link resolution for types under namespaces.
+ - [QTBUG-70801] Added linking of buildversion field to
+   navigation.landingpage.
+ - [QTBUG-72357] Fixed regression in including inherited members in
+   all-members list.
+ - [QTBUG-72723] Don't include overridden functions in all-members list
+   anymore.
+ - [QTBUG-71792] Section headers in C++ reference pages for sections
+   without content are now skipped.
 
 ****************************************************************************
-*                               winrtrunner                                *
+*                               Qt Assistant                               *
 ****************************************************************************
 
- - Loopback exemption for UWP applications:
-   * Added ability to enable loopback exemption for clients. This basically
-     enables UWP applications to connect to a local server for debugging
-     purposes.
-   * Added ability to enable loopback exemption for servers. This basically
-     enables UWP applications to react on socket connections that are made
-     from the same machine for debugging purposes.
+ - [QTBUG-72174] Fixed an issue with opening a read-only qhc file.
 
 ****************************************************************************
 *                                 Qt Help                                  *
 ****************************************************************************
 
- - [QTCREATORBUG-18242] Fixed the issue with too many open files, when
-   many documentation files were registered.
- - [QTBUG-59363] Fixed jumping to the proper documentation version
-   when activating the link that refers to another qch file.
- - [QTBUG-21357] Items are now sorted alphabetically in Contents view.
- - Removed qhelpconverter tool.
- - Merged qcollectiongenerator tool into the qhelpgenerator tool.
+ - Re-added the qcollectiongenerator tool, which was removed in Qt 5.12.0
+   release. It redirects to the qhelpgenerator tool now.
 
 ****************************************************************************
-*                                Qt Linguist                               *
+*                               windeployqt                                *
 ****************************************************************************
 
- - Added "Go to" action to context menu in "Phrases and guesses" pane.
+ - Added deployment of Qt Virtual Keyboard plugins.
+ - Added support for packaging arm64 desktop apps.
 
-lupdate
--------
+****************************************************************************
+*                               winrtrunner                                *
+****************************************************************************
 
- - [QTBUG-63364] Add support for C++17 nested namespaces.
- - [QTBUG-62478] Fixed premature termination on qmake .prf execution errors.
- - Updated qmake project handling to newer functionality in qmake.
+ - winrtrunner now forwards the QT_LOGGING_RULES environment variable to
+   the actual application.
