@@ -4,6 +4,7 @@ libQt5Designer.so.5:Qt_5.1
 libQt5Designer.so.5:Qt_5.10
 libQt5Designer.so.5:Qt_5.11
 libQt5Designer.so.5:Qt_5.12
+libQt5Designer.so.5:Qt_5.12.2_PRIVATE_API
 libQt5Designer.so.5:Qt_5.2
 libQt5Designer.so.5:Qt_5.3
 libQt5Designer.so.5:Qt_5.4
@@ -12,7 +13,6 @@ libQt5Designer.so.5:Qt_5.6
 libQt5Designer.so.5:Qt_5.7
 libQt5Designer.so.5:Qt_5.8
 libQt5Designer.so.5:Qt_5.9
-libQt5Designer.so.5:Qt_5_PRIVATE_API
 libQt5Designer.so.5:_Z20domPropertyToVariantP20QAbstractFormBuilderPK11QMetaObjectPK11DomProperty
 libQt5Designer.so.5:_Z20domPropertyToVariantPK11DomProperty
 libQt5Designer.so.5:_Z20variantToDomPropertyP20QAbstractFormBuilderPK11QMetaObjectRK7QStringRK8QVariant
@@ -3234,7 +3234,7 @@ libQt5Designer.so.5:_ZThn24_N22QDesignerPropertySheetD1Ev
 libQt5Designer.so.5:_ZThn24_NK22QDesignerPropertySheet17isDynamicPropertyEi
 libQt5Designer.so.5:_ZThn24_NK22QDesignerPropertySheet21canAddDynamicPropertyERK7QString
 libQt5Designer.so.5:_ZThn24_NK22QDesignerPropertySheet24dynamicPropertiesAllowedEv
-libQt5DesignerComponents.so.5:Qt_5_PRIVATE_API
+libQt5DesignerComponents.so.5:Qt_5.12.2_PRIVATE_API
 libQt5DesignerComponents.so.5:_ZN19QDesignerComponents14createTaskMenuEP28QDesignerFormEditorInterfaceP7QObject
 libQt5DesignerComponents.so.5:_ZN19QDesignerComponents15createWidgetBoxEP28QDesignerFormEditorInterfaceP7QWidget
 libQt5DesignerComponents.so.5:_ZN19QDesignerComponents16createFormEditorEP7QObject
@@ -3251,6 +3251,7 @@ libQt5Help.so.5:Qt_5.1
 libQt5Help.so.5:Qt_5.10
 libQt5Help.so.5:Qt_5.11
 libQt5Help.so.5:Qt_5.12
+libQt5Help.so.5:Qt_5.12.2_PRIVATE_API
 libQt5Help.so.5:Qt_5.2
 libQt5Help.so.5:Qt_5.3
 libQt5Help.so.5:Qt_5.4
@@ -3259,7 +3260,6 @@ libQt5Help.so.5:Qt_5.6
 libQt5Help.so.5:Qt_5.7
 libQt5Help.so.5:Qt_5.8
 libQt5Help.so.5:Qt_5.9
-libQt5Help.so.5:Qt_5_PRIVATE_API
 libQt5Help.so.5:_ZN11QHelpEngine11indexWidgetEv
 libQt5Help.so.5:_ZN11QHelpEngine11qt_metacallEN11QMetaObject4CallEiPPv
 libQt5Help.so.5:_ZN11QHelpEngine11qt_metacastEPKc
