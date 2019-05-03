@@ -1,5 +1,5 @@
-Qt 5.12.2 is a bug-fix release. It maintains both forward and backward
-compatibility (source and binary) with Qt 5.12.0 through 5.12.1.
+Qt 5.12.3 is a bug-fix release. It maintains both forward and backward
+compatibility (source and binary) with Qt 5.12.0 through 5.12.2.
 
 For more details, refer to the online documentation included in this
 distribution. The documentation is also available online:
@@ -18,7 +18,7 @@ Each of these identifiers can be entered in the bug tracker to obtain more
 information about a particular change.
 
 ****************************************************************************
-*                                 lupdate                                  *
+*                                 makeqpf                                  *
 ****************************************************************************
 
- - [QTBUG-42736] Added support for parsing C++11 raw string literals
+ - Fix assert when rendering font using debug build of Qt
