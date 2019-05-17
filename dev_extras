@@ -9,3 +9,4 @@
 /usr/bin/qhelpgenerator
 /usr/bin/qtattributionsscanner
 /usr/bin/qtplugininfo
+/usr/lib64/libQt5UiTools.a

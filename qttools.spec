@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qttools
 Version  : 5.12.3
-Release  : 19
+Release  : 20
 URL      : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qttools-everywhere-src-5.12.3.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qttools-everywhere-src-5.12.3.tar.xz
 Summary  : No detailed summary available
@@ -111,7 +111,7 @@ test -r config.log && cat config.log
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1556925933
+export SOURCE_DATE_EPOCH=1558125283
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qttools
 cp LICENSE.FDL %{buildroot}/usr/share/package-licenses/qttools/LICENSE.FDL
@@ -415,6 +415,7 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/packag
 /usr/lib64/libQt5DesignerComponents.so
 /usr/lib64/libQt5Help.prl
 /usr/lib64/libQt5Help.so
+/usr/lib64/libQt5UiTools.a
 /usr/lib64/libQt5UiTools.prl
 /usr/lib64/pkgconfig/Qt5Designer.pc
 /usr/lib64/pkgconfig/Qt5Help.pc
@@ -452,4 +453,4 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/packag
 
 %files staticdev
 %defattr(-,root,root,-)
-/usr/lib64/libQt5UiTools.a
+%exclude /usr/lib64/libQt5UiTools.a
