@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qttools
 Version  : 5.12.3
-Release  : 20
+Release  : 21
 URL      : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qttools-everywhere-src-5.12.3.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qttools-everywhere-src-5.12.3.tar.xz
 Summary  : No detailed summary available
@@ -106,12 +106,13 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-%qmake
+export GCC_IGNORE_WERROR=1
+%qmake -config ltcg
 test -r config.log && cat config.log
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1558125283
+export SOURCE_DATE_EPOCH=1559697045
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qttools
 cp LICENSE.FDL %{buildroot}/usr/share/package-licenses/qttools/LICENSE.FDL
