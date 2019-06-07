@@ -1,0 +1,5 @@
+pushd src/designer/src/uitools
+  make clean
+  qmake QMAKE_CXXFLAGS+=-fno-lto        # Can't have LTO (static)
+  make
+popd
