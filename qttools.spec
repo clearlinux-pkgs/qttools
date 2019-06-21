@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : qttools
-Version  : 5.12.3
-Release  : 22
-URL      : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qttools-everywhere-src-5.12.3.tar.xz
-Source0  : https://download.qt.io/official_releases/qt/5.12/5.12.3/submodules/qttools-everywhere-src-5.12.3.tar.xz
+Version  : 5.12.4
+Release  : 23
+URL      : https://download.qt.io/official_releases/qt/5.12/5.12.4/submodules/qttools-everywhere-src-5.12.4.tar.xz
+Source0  : https://download.qt.io/official_releases/qt/5.12/5.12.4/submodules/qttools-everywhere-src-5.12.4.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GFDL-1.3 GPL-2.0 GPL-3.0 LGPL-3.0
@@ -99,7 +99,7 @@ staticdev components for the qttools package.
 
 
 %prep
-%setup -q -n qttools-everywhere-src-5.12.3
+%setup -q -n qttools-everywhere-src-5.12.4
 
 %build
 export http_proxy=http://127.0.0.1:9/
@@ -107,12 +107,12 @@ export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
 export GCC_IGNORE_WERROR=1
-%qmake -config ltcg
+%qmake -config ltcg -config fat-static-lto
 test -r config.log && cat config.log
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1559945136
+export SOURCE_DATE_EPOCH=1561152610
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/designer/src/uitools
@@ -180,93 +180,93 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/packag
 /usr/bin/qhelpgenerator
 /usr/bin/qtattributionsscanner
 /usr/bin/qtplugininfo
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/abstractdialoggui_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/abstractintrospection_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/actioneditor_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/actionprovider_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/actionrepository_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/codedialog_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/connectionedit_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/csshighlighter_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/deviceprofile_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/dialoggui_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/extensionfactory_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/formbuilderextra_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/formlayoutmenu_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/formwindowbase_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/grid_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/gridpanel_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/htmlhighlighter_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/iconloader_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/iconselector_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/invisible_widget_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/layout_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/layoutinfo_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/lib_pch.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/metadatabase_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/morphmenu_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/newactiondialog_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/newformwidget_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/orderdialog_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/plaintexteditor_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/plugindialog_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/pluginmanager_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/previewconfigurationwidget_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/previewmanager_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/promotionmodel_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/promotiontaskmenu_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/properties_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/propertylineedit_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_command2_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_command_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_dnditem_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_dockwidget_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_formbuilder_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_formeditorcommand_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_formwindowcommand_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_formwindowmanager_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_introspection_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_membersheet_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_menu_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_menubar_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_objectinspector_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_promotion_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_promotiondialog_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_propertycommand_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_propertyeditor_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_propertysheet_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_qsettings_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_stackedbox_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_tabwidget_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_taskmenu_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_toolbar_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_toolbox_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_utils_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_widget_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_widgetbox_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qdesigner_widgetitem_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qlayout_widget_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qsimpleresource_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qtresourceeditordialog_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qtresourcemodel_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/qtresourceview_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/rcc_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/resourcebuilder_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/richtexteditor_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/selectsignaldialog_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/shared_enums_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/shared_global_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/shared_settings_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/sheet_delegate_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/signalslotdialog_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/spacer_widget_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/stylesheeteditor_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/textbuilder_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/textpropertyeditor_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/ui4_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/widgetdatabase_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/widgetfactory_p.h
-/usr/include/qt5/QtDesigner/5.12.3/QtDesigner/private/zoomwidget_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/abstractdialoggui_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/abstractintrospection_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/actioneditor_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/actionprovider_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/actionrepository_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/codedialog_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/connectionedit_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/csshighlighter_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/deviceprofile_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/dialoggui_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/extensionfactory_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/formbuilderextra_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/formlayoutmenu_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/formwindowbase_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/grid_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/gridpanel_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/htmlhighlighter_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/iconloader_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/iconselector_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/invisible_widget_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/layout_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/layoutinfo_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/lib_pch.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/metadatabase_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/morphmenu_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/newactiondialog_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/newformwidget_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/orderdialog_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/plaintexteditor_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/plugindialog_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/pluginmanager_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/previewconfigurationwidget_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/previewmanager_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/promotionmodel_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/promotiontaskmenu_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/properties_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/propertylineedit_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_command2_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_command_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_dnditem_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_dockwidget_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_formbuilder_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_formeditorcommand_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_formwindowcommand_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_formwindowmanager_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_introspection_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_membersheet_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_menu_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_menubar_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_objectinspector_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_promotion_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_promotiondialog_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_propertycommand_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_propertyeditor_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_propertysheet_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_qsettings_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_stackedbox_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_tabwidget_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_taskmenu_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_toolbar_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_toolbox_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_utils_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_widget_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_widgetbox_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qdesigner_widgetitem_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qlayout_widget_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qsimpleresource_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qtresourceeditordialog_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qtresourcemodel_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/qtresourceview_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/rcc_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/resourcebuilder_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/richtexteditor_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/selectsignaldialog_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/shared_enums_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/shared_global_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/shared_settings_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/sheet_delegate_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/signalslotdialog_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/spacer_widget_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/stylesheeteditor_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/textbuilder_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/textpropertyeditor_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/ui4_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/widgetdatabase_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/widgetfactory_p.h
+/usr/include/qt5/QtDesigner/5.12.4/QtDesigner/private/zoomwidget_p.h
 /usr/include/qt5/QtDesigner/QAbstractExtensionFactory
 /usr/include/qt5/QtDesigner/QAbstractExtensionManager
 /usr/include/qt5/QtDesigner/QAbstractFormBuilder
@@ -352,17 +352,17 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/packag
 /usr/include/qt5/QtDesigner/sdk_global.h
 /usr/include/qt5/QtDesigner/taskmenu.h
 /usr/include/qt5/QtDesigner/uilib_global.h
-/usr/include/qt5/QtDesignerComponents/5.12.3/QtDesignerComponents/private/lib_pch.h
+/usr/include/qt5/QtDesignerComponents/5.12.4/QtDesignerComponents/private/lib_pch.h
 /usr/include/qt5/QtDesignerComponents/QtDesignerComponents
 /usr/include/qt5/QtDesignerComponents/QtDesignerComponentsDepends
 /usr/include/qt5/QtDesignerComponents/QtDesignerComponentsVersion
 /usr/include/qt5/QtDesignerComponents/qtdesignercomponentsversion.h
-/usr/include/qt5/QtHelp/5.12.3/QtHelp/private/qhelpcollectionhandler_p.h
-/usr/include/qt5/QtHelp/5.12.3/QtHelp/private/qhelpdbreader_p.h
-/usr/include/qt5/QtHelp/5.12.3/QtHelp/private/qhelpengine_p.h
-/usr/include/qt5/QtHelp/5.12.3/QtHelp/private/qhelpsearchindexreader_default_p.h
-/usr/include/qt5/QtHelp/5.12.3/QtHelp/private/qhelpsearchindexreader_p.h
-/usr/include/qt5/QtHelp/5.12.3/QtHelp/private/qhelpsearchindexwriter_default_p.h
+/usr/include/qt5/QtHelp/5.12.4/QtHelp/private/qhelpcollectionhandler_p.h
+/usr/include/qt5/QtHelp/5.12.4/QtHelp/private/qhelpdbreader_p.h
+/usr/include/qt5/QtHelp/5.12.4/QtHelp/private/qhelpengine_p.h
+/usr/include/qt5/QtHelp/5.12.4/QtHelp/private/qhelpsearchindexreader_default_p.h
+/usr/include/qt5/QtHelp/5.12.4/QtHelp/private/qhelpsearchindexreader_p.h
+/usr/include/qt5/QtHelp/5.12.4/QtHelp/private/qhelpsearchindexwriter_default_p.h
 /usr/include/qt5/QtHelp/QHelpContentItem
 /usr/include/qt5/QtHelp/QHelpContentModel
 /usr/include/qt5/QtHelp/QHelpContentWidget
@@ -397,7 +397,7 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/packag
 /usr/include/qt5/QtUiPlugin/customwidget.h
 /usr/include/qt5/QtUiPlugin/qdesignerexportwidget.h
 /usr/include/qt5/QtUiPlugin/qtuipluginversion.h
-/usr/include/qt5/QtUiTools/5.12.3/QtUiTools/private/quiloader_p.h
+/usr/include/qt5/QtUiTools/5.12.4/QtUiTools/private/quiloader_p.h
 /usr/include/qt5/QtUiTools/QUiLoader
 /usr/include/qt5/QtUiTools/QtUiTools
 /usr/include/qt5/QtUiTools/QtUiToolsDepends
@@ -441,13 +441,13 @@ cp tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/packag
 %defattr(-,root,root,-)
 /usr/lib64/libQt5Designer.so.5
 /usr/lib64/libQt5Designer.so.5.12
-/usr/lib64/libQt5Designer.so.5.12.3
+/usr/lib64/libQt5Designer.so.5.12.4
 /usr/lib64/libQt5DesignerComponents.so.5
 /usr/lib64/libQt5DesignerComponents.so.5.12
-/usr/lib64/libQt5DesignerComponents.so.5.12.3
+/usr/lib64/libQt5DesignerComponents.so.5.12.4
 /usr/lib64/libQt5Help.so.5
 /usr/lib64/libQt5Help.so.5.12
-/usr/lib64/libQt5Help.so.5.12.3
+/usr/lib64/libQt5Help.so.5.12.4
 /usr/lib64/qt5/plugins/designer/libqquickwidget.so
 
 %files license

@@ -1,5 +1,5 @@
-Qt 5.12.3 is a bug-fix release. It maintains both forward and backward
-compatibility (source and binary) with Qt 5.12.0 through 5.12.2.
+Qt 5.12.4 is a bug-fix release. It maintains both forward and backward
+compatibility (source and binary) with Qt 5.12.0 through 5.12.3.
 
 For more details, refer to the online documentation included in this
 distribution. The documentation is also available online:
@@ -18,7 +18,16 @@ Each of these identifiers can be entered in the bug tracker to obtain more
 information about a particular change.
 
 ****************************************************************************
-*                                 makeqpf                                  *
+*                                 lupdate                                  *
 ****************************************************************************
 
- - Fix assert when rendering font using debug build of Qt
+ - lupdate will now generate an error if it is asked to update a .ts file
+   with translations, but without a target language. This is to ensure that
+   plural translations are not destroyed.
+
+****************************************************************************
+*                                   qdoc                                   *
+****************************************************************************
+
+ - [QTBUG-73058] qdoc now uses #! as a snippet marker in .cmake,
+   CMakeLists.txt files.
