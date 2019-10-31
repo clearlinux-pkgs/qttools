@@ -1,0 +1,2 @@
+# Work around https://bugreports.qt.io/browse/QTBUG-78286
+sed -i 's/lib"/lib64"/' %{buildroot}/usr/lib64/cmake/Qt5UiTools/*
