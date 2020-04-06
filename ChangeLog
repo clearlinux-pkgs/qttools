@@ -1,5 +1,5 @@
-Qt 5.14.1 is a bug-fix release. It maintains both forward and backward
-compatibility (source and binary) with Qt 5.14.0.
+Qt 5.14.2 is a bug-fix release. It maintains both forward and backward
+compatibility (source and binary) with Qt 5.14.0 through 5.14.1.
 
 For more details, refer to the online documentation included in this
 distribution. The documentation is also available online:
@@ -18,9 +18,7 @@ Each of these identifiers can be entered in the bug tracker to obtain more
 information about a particular change.
 
 ****************************************************************************
-*                               windeployqt                                *
+*                                   qdoc                                   *
 ****************************************************************************
 
- - [QTBUG-80806] windeployqt has been fixed to work with MinGW, again.
- - [QTBUG-78146] Fixed possible empty content and index widgets when using
-                 Qt Help module.
+ - [QTBUG-82252] Fixed "-F" option on macOS
