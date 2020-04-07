@@ -2,3 +2,6 @@
 # names, one per line.
 # Work around for https://bugreports.qt.io/browse/QTBUG-83375
 /usr/lib64/cmake/Qt5Designer/Qt5Designer_AnalogClockPlugin.cmake
+/usr/lib64/cmake/Qt5Designer/Qt5Designer_MultiPageWidgetPlugin.cmake
+/usr/lib64/cmake/Qt5Designer/Qt5Designer_TicTacToePlugin.cmake
+/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin.cmake
