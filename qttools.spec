@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qttools
 Version  : 5.14.2
-Release  : 28
+Release  : 29
 URL      : https://download.qt.io/official_releases/qt/5.14/5.14.2/submodules/qttools-everywhere-src-5.14.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.14/5.14.2/submodules/qttools-everywhere-src-5.14.2.tar.xz
 Summary  : No detailed summary available
@@ -111,7 +111,7 @@ test -r config.log && cat config.log
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1586208228
+export SOURCE_DATE_EPOCH=1586281152
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/designer/src/uitools
@@ -128,6 +128,8 @@ cp %{_builddir}/qttools-everywhere-src-5.14.2/LICENSE.GPL3-EXCEPT %{buildroot}/u
 cp %{_builddir}/qttools-everywhere-src-5.14.2/LICENSE.LGPL3 %{buildroot}/usr/share/package-licenses/qttools/f45ee1c765646813b442ca58de72e20a64a7ddba
 cp %{_builddir}/qttools-everywhere-src-5.14.2/tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/package-licenses/qttools/673921c2954e5b10a7388e0a2fc6be083a609bd3
 %make_install
+## Remove excluded files
+rm -f %{buildroot}/usr/lib64/cmake/Qt5Designer/Qt5Designer_AnalogClockPlugin.cmake
 ## install_append content
 # Work around https://bugreports.qt.io/browse/QTBUG-78286
 sed -i 's/lib"/lib64"/' %{buildroot}/usr/lib64/cmake/Qt5UiTools/*
@@ -410,7 +412,6 @@ sed -i 's/lib"/lib64"/' %{buildroot}/usr/lib64/cmake/Qt5UiTools/*
 /usr/lib64/cmake/Qt5AttributionsScannerTools/Qt5AttributionsScannerToolsConfigVersion.cmake
 /usr/lib64/cmake/Qt5Designer/Qt5DesignerConfig.cmake
 /usr/lib64/cmake/Qt5Designer/Qt5DesignerConfigVersion.cmake
-/usr/lib64/cmake/Qt5Designer/Qt5Designer_AnalogClockPlugin.cmake
 /usr/lib64/cmake/Qt5Designer/Qt5Designer_MultiPageWidgetPlugin.cmake
 /usr/lib64/cmake/Qt5Designer/Qt5Designer_QQuickWidgetPlugin.cmake
 /usr/lib64/cmake/Qt5Designer/Qt5Designer_TicTacToePlugin.cmake
