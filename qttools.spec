@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qttools
 Version  : 5.15.2
-Release  : 33
+Release  : 34
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttools-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttools-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -34,6 +34,7 @@ BuildRequires : pkgconfig(Qt5Test)
 BuildRequires : pkgconfig(Qt5Widgets)
 BuildRequires : pkgconfig(Qt5Xml)
 BuildRequires : qtdeclarative-staticdev
+Patch1: qttools-stable-branch.patch
 
 %description
 This tool allows introspection of incoming events for a QWidget, similar to the X11 xev tool.
@@ -99,6 +100,7 @@ license components for the qttools package.
 %prep
 %setup -q -n qttools-everywhere-src-5.15.2
 cd %{_builddir}/qttools-everywhere-src-5.15.2
+%patch1 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
@@ -111,7 +113,7 @@ test -r config.log && cat config.log
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1630805677
+export SOURCE_DATE_EPOCH=1643743337
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/designer/src/uitools
@@ -129,10 +131,10 @@ cp %{_builddir}/qttools-everywhere-src-5.15.2/LICENSE.LGPL3 %{buildroot}/usr/sha
 cp %{_builddir}/qttools-everywhere-src-5.15.2/tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/package-licenses/qttools/673921c2954e5b10a7388e0a2fc6be083a609bd3
 %make_install
 ## Remove excluded files
-rm -f %{buildroot}/usr/lib64/cmake/Qt5Designer/Qt5Designer_AnalogClockPlugin.cmake
-rm -f %{buildroot}/usr/lib64/cmake/Qt5Designer/Qt5Designer_MultiPageWidgetPlugin.cmake
-rm -f %{buildroot}/usr/lib64/cmake/Qt5Designer/Qt5Designer_TicTacToePlugin.cmake
-rm -f %{buildroot}/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin.cmake
+rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_AnalogClockPlugin.cmake
+rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_MultiPageWidgetPlugin.cmake
+rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_TicTacToePlugin.cmake
+rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin.cmake
 ## install_append content
 # Work around https://bugreports.qt.io/browse/QTBUG-78286
 sed -i 's/lib"/lib64"/' %{buildroot}/usr/lib64/cmake/Qt5UiTools/*
