@@ -33,7 +33,7 @@ Topi Reinio (5):
 
 diff --git a/dist/changes-5.12.10 b/dist/changes-5.12.10
 new file mode 100644
-index 00000000..95c6a0b2
+index 000000000..95c6a0b2f
 --- /dev/null
 +++ b/dist/changes-5.12.10
 @@ -0,0 +1,26 @@
@@ -64,7 +64,7 @@ index 00000000..95c6a0b2
 +*                          Library                                         *
 +****************************************************************************
 diff --git a/src/assistant/help/qhelpcollectionhandler.cpp b/src/assistant/help/qhelpcollectionhandler.cpp
-index 69782d45..d7b319d1 100644
+index 69782d45f..d7b319d19 100644
 --- a/src/assistant/help/qhelpcollectionhandler.cpp
 +++ b/src/assistant/help/qhelpcollectionhandler.cpp
 @@ -2197,7 +2197,15 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable
@@ -85,7 +85,7 @@ index 69782d45..d7b319d1 100644
          return false;
  
 diff --git a/src/linguist/Qt5LinguistToolsMacros.cmake b/src/linguist/Qt5LinguistToolsMacros.cmake
-index ab271d56..20fb1493 100644
+index ab271d56a..20fb14935 100644
 --- a/src/linguist/Qt5LinguistToolsMacros.cmake
 +++ b/src/linguist/Qt5LinguistToolsMacros.cmake
 @@ -41,6 +41,17 @@ function(QT5_CREATE_TRANSLATION _qm_files)
@@ -135,7 +135,7 @@ index ab271d56..20fb1493 100644
      qt5_add_translation(${_qm_files} ${_my_tsfiles})
      set(${_qm_files} ${${_qm_files}} PARENT_SCOPE)
 diff --git a/src/qdbus/qdbusviewer/qdbusviewer.pro b/src/qdbus/qdbusviewer/qdbusviewer.pro
-index 02ec7a2d..07a47cd4 100644
+index 02ec7a2d2..07a47cd4c 100644
 --- a/src/qdbus/qdbusviewer/qdbusviewer.pro
 +++ b/src/qdbus/qdbusviewer/qdbusviewer.pro
 @@ -23,7 +23,7 @@ mac {
@@ -149,13 +149,13 @@ index 02ec7a2d..07a47cd4 100644
  load(qt_app)
 diff --git a/src/qdbus/qdbusviewer/qdbusviewer.rc b/src/qdbus/qdbusviewer/qdbusviewer.rc
 deleted file mode 100644
-index c4b1d60b..00000000
+index c4b1d60b8..000000000
 --- a/src/qdbus/qdbusviewer/qdbusviewer.rc
 +++ /dev/null
 @@ -1 +0,0 @@
 -IDI_ICON1		ICON		DISCARDABLE	"images/qdbusviewer.ico"
 diff --git a/src/qdoc/doc/qdoc-manual-topiccmds.qdoc b/src/qdoc/doc/qdoc-manual-topiccmds.qdoc
-index 0837648b..7d906ce6 100644
+index 0837648b7..7d906ce64 100644
 --- a/src/qdoc/doc/qdoc-manual-topiccmds.qdoc
 +++ b/src/qdoc/doc/qdoc-manual-topiccmds.qdoc
 @@ -930,22 +930,24 @@
@@ -190,7 +190,7 @@ index 0837648b..7d906ce6 100644
  
      The page title is set using the \l {title-command} {\\title}
 diff --git a/src/qdoc/docbookgenerator.cpp b/src/qdoc/docbookgenerator.cpp
-index 3e4f03cf..82893be9 100644
+index 3e4f03cf0..82893be97 100644
 --- a/src/qdoc/docbookgenerator.cpp
 +++ b/src/qdoc/docbookgenerator.cpp
 @@ -2436,12 +2436,10 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
@@ -229,7 +229,7 @@ index 3e4f03cf..82893be9 100644
      while (section != sectionVector->constEnd()) {
          bool headerGenerated = false;
 diff --git a/src/qdoc/helpprojectwriter.cpp b/src/qdoc/helpprojectwriter.cpp
-index d411802d..c534d399 100644
+index d411802dc..c534d399b 100644
 --- a/src/qdoc/helpprojectwriter.cpp
 +++ b/src/qdoc/helpprojectwriter.cpp
 @@ -234,7 +234,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
@@ -242,7 +242,7 @@ index d411802d..c534d399 100644
  
      if (node->name().isEmpty())
 diff --git a/src/qdoc/htmlgenerator.cpp b/src/qdoc/htmlgenerator.cpp
-index a554f1ac..24735237 100644
+index a554f1ac4..24735237a 100644
 --- a/src/qdoc/htmlgenerator.cpp
 +++ b/src/qdoc/htmlgenerator.cpp
 @@ -1286,8 +1286,12 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
@@ -261,7 +261,7 @@ index a554f1ac..24735237 100644
          generateExtractionMark(aggregate, DetailedDescriptionMark);
          out() << "<div class=\"descr\">\n" // QTBUG-9504
 diff --git a/src/qdoc/jscodemarker.cpp b/src/qdoc/jscodemarker.cpp
-index b3c675d5..0e1eb226 100644
+index b3c675d5b..0e1eb2267 100644
 --- a/src/qdoc/jscodemarker.cpp
 +++ b/src/qdoc/jscodemarker.cpp
 @@ -78,16 +78,16 @@ bool JsCodeMarker::recognizeCode(const QString &code)
@@ -286,7 +286,7 @@ index b3c675d5..0e1eb226 100644
  
  /*!
 diff --git a/src/qdoc/node.cpp b/src/qdoc/node.cpp
-index 82306eee..29985a8b 100644
+index 82306eeed..29985a8bc 100644
 --- a/src/qdoc/node.cpp
 +++ b/src/qdoc/node.cpp
 @@ -2749,6 +2749,8 @@ void Aggregate::findAllAttributions(NodeMultiMap &attributions)
@@ -299,7 +299,7 @@ index 82306eee..29985a8b 100644
          // Insert a new entry into each map for each new since string found.
          if (!node->isPrivate() && !sinceString.isEmpty()) {
 diff --git a/src/qtpaths/qtpaths.cpp b/src/qtpaths/qtpaths.cpp
-index 340a2ac4..9a9c9057 100644
+index 340a2ac43..9a9c90577 100644
 --- a/src/qtpaths/qtpaths.cpp
 +++ b/src/qtpaths/qtpaths.cpp
 @@ -79,30 +79,44 @@ Q_NORETURN static void error(const QString &message)
@@ -464,7 +464,7 @@ index 340a2ac4..9a9c9057 100644
          parser.showHelp();
 diff --git a/tests/auto/qdoc/generatedoutput/expected_output/dontdocument/dontdocument.qhp b/tests/auto/qdoc/generatedoutput/expected_output/dontdocument/dontdocument.qhp
 new file mode 100644
-index 00000000..098200a9
+index 000000000..098200a95
 --- /dev/null
 +++ b/tests/auto/qdoc/generatedoutput/expected_output/dontdocument/dontdocument.qhp
 @@ -0,0 +1,55 @@
@@ -524,7 +524,7 @@ index 00000000..098200a9
 +    </filterSection>
 +</QtHelpProject>
 diff --git a/tests/auto/qdoc/generatedoutput/expected_output/headerfile-docbook/testheader.xml b/tests/auto/qdoc/generatedoutput/expected_output/headerfile-docbook/testheader.xml
-index f3461fb1..afa0b20a 100644
+index f3461fb1a..afa0b20a3 100644
 --- a/tests/auto/qdoc/generatedoutput/expected_output/headerfile-docbook/testheader.xml
 +++ b/tests/auto/qdoc/generatedoutput/expected_output/headerfile-docbook/testheader.xml
 @@ -1,7 +1,7 @@
@@ -610,7 +610,7 @@ index f3461fb1..afa0b20a 100644
 +</db:section>
  </db:article>
 diff --git a/tests/auto/qdoc/generatedoutput/testdata/dontdocument/dontdocument.qdocconf b/tests/auto/qdoc/generatedoutput/testdata/dontdocument/dontdocument.qdocconf
-index 117920e5..ef45f50a 100644
+index 117920e56..ef45f50a6 100644
 --- a/tests/auto/qdoc/generatedoutput/testdata/dontdocument/dontdocument.qdocconf
 +++ b/tests/auto/qdoc/generatedoutput/testdata/dontdocument/dontdocument.qdocconf
 @@ -3,5 +3,19 @@ include(../configs/testcpp.qdocconf)
@@ -634,7 +634,7 @@ index 117920e5..ef45f50a 100644
  HTML.nosubdirs = true
  HTML.outputsubdir = dontdocument
 diff --git a/tests/auto/qdoc/generatedoutput/tst_generatedoutput.cpp b/tests/auto/qdoc/generatedoutput/tst_generatedoutput.cpp
-index fd68159a..a83ba337 100644
+index fd68159a2..a83ba337f 100644
 --- a/tests/auto/qdoc/generatedoutput/tst_generatedoutput.cpp
 +++ b/tests/auto/qdoc/generatedoutput/tst_generatedoutput.cpp
 @@ -349,7 +349,8 @@ void tst_generatedOutput::dontDocument()
