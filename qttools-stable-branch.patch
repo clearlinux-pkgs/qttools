@@ -5,6 +5,9 @@ Antti Kokko (2):
 Edward Welbourne (1):
       Clear out deprecated QLocale::Language values
 
+Friedemann Kleint (1):
+      Bump copyright year to 2021
+
 Jani Heikkinen (1):
       Bump version
 
@@ -13,6 +16,9 @@ Kai Koehne (4):
       CMake: Fix usage of qt_create_translation in a CTest
       Doc: Document attribution argument
       CMake: Fix handling of -extensions argument
+
+Kai Köhne (1):
+      Fix check for malformed input when decoding translations
 
 Kai Pastor (1):
       Clamp registered collection time-stamp to SOURCE_DATE_EPOCH if set
@@ -24,12 +30,21 @@ Ralf Habacker (2):
       qtpaths: Add missing location types
       Replace prefined application name by a generic name
 
-Topi Reinio (5):
+Tarja Sundqvist (2):
+      Update commercial license headers
+      Revert "Update commercial license headers"
+
+Topi Reinio (10):
       qdoc: Avoid duplicates in \sincelist
       qdoc: Handle JSON as plain text
       qdoc: DocBook generator: Fix \headerfile generation
       qdoc: Skip ignored entries in .qhp
       qdoc: Avoid excess warnings for undocumented namespaces
+      qdoc: Fix breadcrumb generation for normal page nodes
+      qdoc: Ignore empty example meta tags
+      qdoc: Fix addendums for QML signals that contain '.' in the name
+      qdoc: Fix generation of TOC for basic QML/JS types
+      qdoc: Don't clear the warning count in single-exec mode
 
 diff --git a/dist/changes-5.12.10 b/dist/changes-5.12.10
 new file mode 100644
@@ -63,6 +78,19 @@ index 000000000..95c6a0b2f
 +****************************************************************************
 +*                          Library                                         *
 +****************************************************************************
+diff --git a/src/assistant/assistant/mainwindow.cpp b/src/assistant/assistant/mainwindow.cpp
+index 1c5de9b85..b09dfc1b5 100644
+--- a/src/assistant/assistant/mainwindow.cpp
++++ b/src/assistant/assistant/mainwindow.cpp
+@@ -912,7 +912,7 @@ void MainWindow::showAboutDialog()
+             "<p>Version %2</p>"
+             "<p>Browser: %3</p></center>"
+             "<p>Copyright (C) %4 The Qt Company Ltd.</p>")
+-            .arg(tr("Qt Assistant"), QLatin1String(QT_VERSION_STR), browser, QStringLiteral("2020")),
++            .arg(tr("Qt Assistant"), QLatin1String(QT_VERSION_STR), browser, QStringLiteral("2021")),
+             resources);
+         QLatin1String path(":/qt-project.org/assistant/images/assistant-128.png");
+         aboutDia.setPixmap(QString(path));
 diff --git a/src/assistant/help/qhelpcollectionhandler.cpp b/src/assistant/help/qhelpcollectionhandler.cpp
 index 69782d45f..d7b319d19 100644
 --- a/src/assistant/help/qhelpcollectionhandler.cpp
@@ -84,6 +112,19 @@ index 69782d45f..d7b319d19 100644
      if (!m_query->exec())
          return false;
  
+diff --git a/src/designer/src/designer/versiondialog.cpp b/src/designer/src/designer/versiondialog.cpp
+index 8e2e399e0..80bc2b6d2 100644
+--- a/src/designer/src/designer/versiondialog.cpp
++++ b/src/designer/src/designer/versiondialog.cpp
+@@ -160,7 +160,7 @@ VersionDialog::VersionDialog(QWidget *parent)
+ 
+     lbl->setText(tr("%1"
+                     "<br/>Copyright (C) %2 The Qt Company Ltd."
+-                    ).arg(version, QStringLiteral("2020")));
++                    ).arg(version, QStringLiteral("2021")));
+ 
+     lbl->setWordWrap(true);
+     lbl->setOpenExternalLinks(true);
 diff --git a/src/linguist/Qt5LinguistToolsMacros.cmake b/src/linguist/Qt5LinguistToolsMacros.cmake
 index ab271d56a..20fb14935 100644
 --- a/src/linguist/Qt5LinguistToolsMacros.cmake
@@ -134,6 +175,45 @@ index ab271d56a..20fb14935 100644
      endforeach()
      qt5_add_translation(${_qm_files} ${_my_tsfiles})
      set(${_qm_files} ${${_qm_files}} PARENT_SCOPE)
+diff --git a/src/linguist/linguist/mainwindow.cpp b/src/linguist/linguist/mainwindow.cpp
+index 3f04a68f7..468c49d1d 100644
+--- a/src/linguist/linguist/mainwindow.cpp
++++ b/src/linguist/linguist/mainwindow.cpp
+@@ -1363,7 +1363,7 @@ void MainWindow::about()
+     const QString description
+             = tr("Qt Linguist is a tool for adding translations to Qt applications.");
+     const QString copyright
+-            = tr("Copyright (C) %1 The Qt Company Ltd.").arg(QStringLiteral("2020"));
++            = tr("Copyright (C) %1 The Qt Company Ltd.").arg(QStringLiteral("2021"));
+     box.setText(QStringLiteral("<center><img src=\":/images/icons/linguist-128-32.png\"/></img><p>%1</p></center>"
+                                "<p>%2</p>"
+                                "<p>%3</p>").arg(version, description, copyright));
+diff --git a/src/linguist/shared/qm.cpp b/src/linguist/shared/qm.cpp
+index 288607824..8c3fc3faf 100644
+--- a/src/linguist/shared/qm.cpp
++++ b/src/linguist/shared/qm.cpp
+@@ -552,7 +552,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
+                 goto end;
+             case Tag_Translation: {
+                 int len = read32(m);
+-                if (len % 1) {
++                if (len & 1) {
+                     cd.appendError(QLatin1String("QM-Format error"));
+                     return false;
+                 }
+diff --git a/src/qdbus/qdbusviewer/mainwindow.cpp b/src/qdbus/qdbusviewer/mainwindow.cpp
+index 37a2ef783..949663616 100644
+--- a/src/qdbus/qdbusviewer/mainwindow.cpp
++++ b/src/qdbus/qdbusviewer/mainwindow.cpp
+@@ -90,7 +90,7 @@ void MainWindow::about()
+                 "<h3>%1</h3>"
+                 "<p>Version %2</p></center>"
+                 "<p>Copyright (C) %3 The Qt Company Ltd.</p>")
+-            .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QStringLiteral("2020")));
++            .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QStringLiteral("2021")));
+     box.setWindowTitle(tr("D-Bus Viewer"));
+     box.exec();
+ }
 diff --git a/src/qdbus/qdbusviewer/qdbusviewer.pro b/src/qdbus/qdbusviewer/qdbusviewer.pro
 index 02ec7a2d2..07a47cd4c 100644
 --- a/src/qdbus/qdbusviewer/qdbusviewer.pro
@@ -190,7 +270,7 @@ index 0837648b7..7d906ce64 100644
  
      The page title is set using the \l {title-command} {\\title}
 diff --git a/src/qdoc/docbookgenerator.cpp b/src/qdoc/docbookgenerator.cpp
-index 3e4f03cf0..82893be97 100644
+index 3e4f03cf0..b5acf4d7b 100644
 --- a/src/qdoc/docbookgenerator.cpp
 +++ b/src/qdoc/docbookgenerator.cpp
 @@ -2436,12 +2436,10 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
@@ -228,6 +308,34 @@ index 3e4f03cf0..82893be97 100644
      SectionVector::ConstIterator section = sectionVector->constBegin();
      while (section != sectionVector->constEnd()) {
          bool headerGenerated = false;
+@@ -3420,8 +3422,9 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
+     case QmlSignalHandler:
+     {
+         QString handler(node->name());
+-        handler[0] = handler[0].toTitleCase();
+-        handler.prepend(QLatin1String("on"));
++        int prefixLocation = handler.lastIndexOf('.', -2) + 1;
++        handler[prefixLocation] = handler[prefixLocation].toTitleCase();
++        handler.insert(prefixLocation, QLatin1String("on"));
+         writer->writeStartElement(dbNamespace, "para");
+         writer->writeCharacters("The corresponding handler is ");
+         writer->writeTextElement(dbNamespace, "code", handler);
+diff --git a/src/qdoc/generator.cpp b/src/qdoc/generator.cpp
+index b3aacb623..e753d3090 100644
+--- a/src/qdoc/generator.cpp
++++ b/src/qdoc/generator.cpp
+@@ -1387,8 +1387,9 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
+     case QmlSignalHandler:
+     {
+         QString handler(node->name());
+-        handler[0] = handler[0].toTitleCase();
+-        handler.prepend(QLatin1String("on"));
++        int prefixLocation = handler.lastIndexOf('.', -2) + 1;
++        handler[prefixLocation] = handler[prefixLocation].toTitleCase();
++        handler.insert(prefixLocation, QLatin1String("on"));
+         text << "The corresponding handler is "
+              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_TELETYPE) << handler
+              << Atom(Atom::FormattingRight, ATOM_FORMATTING_TELETYPE) << ".";
 diff --git a/src/qdoc/helpprojectwriter.cpp b/src/qdoc/helpprojectwriter.cpp
 index d411802dc..c534d399b 100644
 --- a/src/qdoc/helpprojectwriter.cpp
@@ -242,7 +350,7 @@ index d411802dc..c534d399b 100644
  
      if (node->name().isEmpty())
 diff --git a/src/qdoc/htmlgenerator.cpp b/src/qdoc/htmlgenerator.cpp
-index a554f1ac4..24735237a 100644
+index a554f1ac4..aaea6a65f 100644
 --- a/src/qdoc/htmlgenerator.cpp
 +++ b/src/qdoc/htmlgenerator.cpp
 @@ -1286,8 +1286,12 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
@@ -260,6 +368,37 @@ index a554f1ac4..24735237a 100644
      } else {
          generateExtractionMark(aggregate, DetailedDescriptionMark);
          out() << "<div class=\"descr\">\n" // QTBUG-9504
+@@ -1774,8 +1778,8 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
+                           << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight)
+                           << Atom(itemLeft) << Atom(Atom::String, title) << Atom(itemRight);
+     } else {
+-        if (node->isAggregate()) {
+-            QStringList groups = static_cast<const Aggregate *>(node)->groupNames();
++        if (node->isPageNode()) {
++            QStringList groups = static_cast<const PageNode *>(node)->groupNames();
+             if (groups.length() == 1) {
+                 const Node *groupNode =
+                         qdb_->findNodeByNameAndType(QStringList(groups[0]), &Node::isGroup);
+@@ -2290,8 +2294,8 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
+             }
+         }
+     } else if (sections
+-               && (node->isClassNode() || node->isNamespace() || node->isQmlType()
+-                   || node->isJsType())) {
++               && (node->isClassNode() || node->isNamespace() || node->isQmlType() ||
++                   node->isJsType() || node->isQmlBasicType() || node->isJsBasicType())) {
+         for (const auto &section : qAsConst(*sections)) {
+             if (!section.members().isEmpty()) {
+                 out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
+@@ -3981,7 +3985,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString
+         // Include tags added via \meta {tag} {tag1[,tag2,...]}
+         // within \example topic
+         for (const auto &tag : en->doc().metaTagMap().values("tag")) {
+-            const auto &tagList = tag.toLower().split(QLatin1Char(','));
++            const auto &tagList = tag.toLower().split(QLatin1Char(','), Qt::SkipEmptyParts);
+             tags += QSet<QString>(tagList.cbegin(), tagList.cend());
+         }
+ 
 diff --git a/src/qdoc/jscodemarker.cpp b/src/qdoc/jscodemarker.cpp
 index b3c675d5b..0e1eb2267 100644
 --- a/src/qdoc/jscodemarker.cpp
@@ -285,6 +424,20 @@ index b3c675d5b..0e1eb2267 100644
  }
  
  /*!
+diff --git a/src/qdoc/location.cpp b/src/qdoc/location.cpp
+index a63b1780e..ea2257980 100644
+--- a/src/qdoc/location.cpp
++++ b/src/qdoc/location.cpp
+@@ -325,7 +325,8 @@ void Location::initialize()
+     tabSize = config.getInt(CONFIG_TABSIZE);
+     programName = config.programName();
+     project = config.getString(CONFIG_PROJECT);
+-    warningCount = 0;
++    if (!config.singleExec())
++        warningCount = 0;
+     if (qEnvironmentVariableIsSet("QDOC_ENABLE_WARNINGLIMIT")
+         || config.getBool(CONFIG_WARNINGLIMIT + Config::dot + "enabled"))
+         warningLimit = config.getInt(CONFIG_WARNINGLIMIT);
 diff --git a/src/qdoc/node.cpp b/src/qdoc/node.cpp
 index 82306eeed..29985a8bc 100644
 --- a/src/qdoc/node.cpp
@@ -609,6 +762,19 @@ index f3461fb1a..afa0b20a3 100644
 +</db:section>
 +</db:section>
  </db:article>
+diff --git a/tests/auto/qdoc/generatedoutput/expected_output/qml-int.html b/tests/auto/qdoc/generatedoutput/expected_output/qml-int.html
+index 0b21da628..16603af4b 100644
+--- a/tests/auto/qdoc/generatedoutput/expected_output/qml-int.html
++++ b/tests/auto/qdoc/generatedoutput/expected_output/qml-int.html
+@@ -10,6 +10,8 @@
+ <div class="toc">
+ <h3><a name="toc">Contents</a></h3>
+ <ul>
++<li class="level1"><a href="#methods">Methods</a></li>
++<li class="level1"><a href="#details">Detailed Description</a></li>
+ </ul>
+ </div>
+ <div class="sidebar-content" id="sidebar-content"></div></div>
 diff --git a/tests/auto/qdoc/generatedoutput/testdata/dontdocument/dontdocument.qdocconf b/tests/auto/qdoc/generatedoutput/testdata/dontdocument/dontdocument.qdocconf
 index 117920e56..ef45f50a6 100644
 --- a/tests/auto/qdoc/generatedoutput/testdata/dontdocument/dontdocument.qdocconf

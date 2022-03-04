@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : qttools
 Version  : 5.15.2
-Release  : 35
+Release  : 36
 URL      : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttools-everywhere-src-5.15.2.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttools-everywhere-src-5.15.2.tar.xz
 Summary  : No detailed summary available
@@ -113,7 +113,7 @@ test -r config.log && cat config.log
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1646326822
+export SOURCE_DATE_EPOCH=1646411685
 rm -rf %{buildroot}
 ## install_prepend content
 pushd src/designer/src/uitools
