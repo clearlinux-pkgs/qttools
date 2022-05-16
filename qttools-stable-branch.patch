@@ -8,8 +8,12 @@ Edward Welbourne (1):
 Friedemann Kleint (1):
       Bump copyright year to 2021
 
-Jani Heikkinen (1):
+Jani Heikkinen (2):
       Bump version
+      Bump version
+
+JiDe Zhang (1):
+      QDoc: Fix possible crash in WebXMLGenerator
 
 Kai Koehne (4):
       qt5_create_translation: Fix handling of directory dependencies
@@ -17,7 +21,8 @@ Kai Koehne (4):
       Doc: Document attribution argument
       CMake: Fix handling of -extensions argument
 
-Kai Köhne (1):
+Kai Köhne (2):
+      Fix redeclared variable name
       Fix check for malformed input when decoding translations
 
 Kai Pastor (1):
@@ -30,11 +35,12 @@ Ralf Habacker (2):
       qtpaths: Add missing location types
       Replace prefined application name by a generic name
 
-Tarja Sundqvist (2):
+Tarja Sundqvist (3):
       Update commercial license headers
       Revert "Update commercial license headers"
+      Merge remote-tracking branch 'origin/tqtc/lts-5.15.4' into tqtc/lts-5.15-opensource
 
-Topi Reinio (10):
+Topi Reinio (11):
       qdoc: Avoid duplicates in \sincelist
       qdoc: Handle JSON as plain text
       qdoc: DocBook generator: Fix \headerfile generation
@@ -45,6 +51,7 @@ Topi Reinio (10):
       qdoc: Fix addendums for QML signals that contain '.' in the name
       qdoc: Fix generation of TOC for basic QML/JS types
       qdoc: Don't clear the warning count in single-exec mode
+      qdoc: Allow any type of page as qhp indexTitle
 
 diff --git a/dist/changes-5.12.10 b/dist/changes-5.12.10
 new file mode 100644
@@ -176,9 +183,22 @@ index ab271d56a..20fb14935 100644
      qt5_add_translation(${_qm_files} ${_my_tsfiles})
      set(${_qm_files} ${${_qm_files}} PARENT_SCOPE)
 diff --git a/src/linguist/linguist/mainwindow.cpp b/src/linguist/linguist/mainwindow.cpp
-index 3f04a68f7..468c49d1d 100644
+index 3f04a68f7..52b8044f6 100644
 --- a/src/linguist/linguist/mainwindow.cpp
 +++ b/src/linguist/linguist/mainwindow.cpp
+@@ -1305,9 +1305,9 @@ void MainWindow::addToPhraseBook()
+             return;
+     } else {
+         bool okPressed = false;
+-        QString selectedPhraseBook = QInputDialog::getItem(this, tr("Add to phrase book"),
+-                                tr("Select phrase book to add to"),
+-                                phraseBookList, 0, false, &okPressed);
++        selectedPhraseBook = QInputDialog::getItem(this, tr("Add to phrase book"),
++                                                   tr("Select phrase book to add to"),
++                                                   phraseBookList, 0, false, &okPressed);
+         if (!okPressed)
+             return;
+     }
 @@ -1363,7 +1363,7 @@ void MainWindow::about()
      const QString description
              = tr("Qt Linguist is a tool for adding translations to Qt applications.");
@@ -337,7 +357,7 @@ index b3aacb623..e753d3090 100644
               << Atom(Atom::FormattingLeft, ATOM_FORMATTING_TELETYPE) << handler
               << Atom(Atom::FormattingRight, ATOM_FORMATTING_TELETYPE) << ".";
 diff --git a/src/qdoc/helpprojectwriter.cpp b/src/qdoc/helpprojectwriter.cpp
-index d411802dc..c534d399b 100644
+index d411802dc..37d048b7a 100644
 --- a/src/qdoc/helpprojectwriter.cpp
 +++ b/src/qdoc/helpprojectwriter.cpp
 @@ -234,7 +234,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
@@ -349,6 +369,17 @@ index d411802dc..c534d399b 100644
          return false;
  
      if (node->name().isEmpty())
+@@ -657,7 +657,9 @@ void HelpProjectWriter::generateProject(HelpProject &project)
+     writer.writeStartElement("toc");
+     writer.writeStartElement("section");
+     const Node *node = qdb_->findPageNodeByTitle(project.indexTitle);
+-    if (node == nullptr)
++    if (!node)
++        node = qdb_->findNodeByNameAndType(QStringList(project.indexTitle), &Node::isPageNode);
++    if (!node)
+         node = qdb_->findNodeByNameAndType(QStringList("index.html"), &Node::isPageNode);
+     QString indexPath;
+     if (node)
 diff --git a/src/qdoc/htmlgenerator.cpp b/src/qdoc/htmlgenerator.cpp
 index a554f1ac4..aaea6a65f 100644
 --- a/src/qdoc/htmlgenerator.cpp
@@ -451,6 +482,19 @@ index 82306eeed..29985a8bc 100644
          QString sinceString = node->since();
          // Insert a new entry into each map for each new since string found.
          if (!node->isPrivate() && !sinceString.isEmpty()) {
+diff --git a/src/qdoc/webxmlgenerator.cpp b/src/qdoc/webxmlgenerator.cpp
+index 4d8906f6a..59e83b1b0 100644
+--- a/src/qdoc/webxmlgenerator.cpp
++++ b/src/qdoc/webxmlgenerator.cpp
+@@ -748,7 +748,7 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom, cons
+         fullName = node->fullName();
+     if (!fullName.isEmpty() && !link.isEmpty()) {
+         writer.writeStartElement("link");
+-        if (!atom->string().isEmpty())
++        if (atom && !atom->string().isEmpty())
+             writer.writeAttribute("raw", atom->string());
+         else
+             writer.writeAttribute("raw", fullName);
 diff --git a/src/qtpaths/qtpaths.cpp b/src/qtpaths/qtpaths.cpp
 index 340a2ac43..9a9c90577 100644
 --- a/src/qtpaths/qtpaths.cpp
