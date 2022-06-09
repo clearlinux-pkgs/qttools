@@ -21,9 +21,10 @@ Kai Koehne (4):
       Doc: Document attribution argument
       CMake: Fix handling of -extensions argument
 
-Kai Köhne (2):
+Kai Köhne (3):
       Fix redeclared variable name
       Fix check for malformed input when decoding translations
+      Fix regression in lconvert handling empty translations
 
 Kai Pastor (1):
       Clamp registered collection time-stamp to SOURCE_DATE_EPOCH if set
@@ -209,18 +210,30 @@ index 3f04a68f7..52b8044f6 100644
                                 "<p>%2</p>"
                                 "<p>%3</p>").arg(version, description, copyright));
 diff --git a/src/linguist/shared/qm.cpp b/src/linguist/shared/qm.cpp
-index 288607824..8c3fc3faf 100644
+index 288607824..d7728552d 100644
 --- a/src/linguist/shared/qm.cpp
 +++ b/src/linguist/shared/qm.cpp
-@@ -552,7 +552,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
+@@ -552,12 +552,17 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                  goto end;
              case Tag_Translation: {
                  int len = read32(m);
 -                if (len % 1) {
-+                if (len & 1) {
++                m += 4;
++
++                // -1 indicates an empty string
++                // Otherwise streaming format is UTF-16 -> 2 bytes per character
++                if ((len != -1) && (len & 1)) {
                      cd.appendError(QLatin1String("QM-Format error"));
                      return false;
                  }
+-                m += 4;
+-                QString str = QString((const QChar *)m, len/2);
++                QString str;
++                if (len != -1)
++                    str = QString((const QChar *)m, len / 2);
+                 if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
+                     for (int i = 0; i < str.length(); ++i)
+                         str[i] = QChar((str.at(i).unicode() >> 8) +
 diff --git a/src/qdbus/qdbusviewer/mainwindow.cpp b/src/qdbus/qdbusviewer/mainwindow.cpp
 index 37a2ef783..949663616 100644
 --- a/src/qdbus/qdbusviewer/mainwindow.cpp
@@ -659,6 +672,30 @@ index 340a2ac43..9a9c90577 100644
      }
      if (results.isEmpty()) {
          parser.showHelp();
+diff --git a/tests/auto/linguist/lconvert/data/untranslated.qm b/tests/auto/linguist/lconvert/data/untranslated.qm
+new file mode 100644
+index 000000000..e31d2553a
+Binary files /dev/null and b/tests/auto/linguist/lconvert/data/untranslated.qm differ
+diff --git a/tests/auto/linguist/lconvert/tst_lconvert.cpp b/tests/auto/linguist/lconvert/tst_lconvert.cpp
+index 2b3729d6c..7ddfd5c01 100644
+--- a/tests/auto/linguist/lconvert/tst_lconvert.cpp
++++ b/tests/auto/linguist/lconvert/tst_lconvert.cpp
+@@ -282,6 +282,7 @@ void tst_lconvert::roundtrips_data()
+     QStringList tsPoTs; tsPoTs << "ts" << "po" << "ts";
+     QStringList tsXlfTs; tsXlfTs << "ts" << "xlf" << "ts";
+     QStringList tsQmTs; tsQmTs << "ts" << "qm" << "ts";
++    QStringList qmTsQm; qmTsQm << "qm" << "ts" << "qm";
+ 
+     QList<QStringList> noArgs;
+     QList<QStringList> filterPoArgs; filterPoArgs << QStringList() << (QStringList() << "-drop-tag" << "po:*");
+@@ -318,6 +319,7 @@ void tst_lconvert::roundtrips_data()
+ 
+     QTest::newRow("ts-po-ts (endless loop)") << "endless-po-loop.ts" << tsPoTs << noArgs;
+     QTest::newRow("ts-qm-ts (whitespace)") << "whitespace.ts" << tsQmTs << noArgs;
++    QTest::newRow("qm-ts-qm (untranslated)") << "untranslated.qm" << qmTsQm << noArgs;
+ }
+ 
+ void tst_lconvert::roundtrips()
 diff --git a/tests/auto/qdoc/generatedoutput/expected_output/dontdocument/dontdocument.qhp b/tests/auto/qdoc/generatedoutput/expected_output/dontdocument/dontdocument.qhp
 new file mode 100644
 index 000000000..098200a95
