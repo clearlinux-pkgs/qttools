@@ -5,8 +5,12 @@ Antti Kokko (2):
 Edward Welbourne (1):
       Clear out deprecated QLocale::Language values
 
-Friedemann Kleint (1):
+Friedemann Kleint (5):
       Bump copyright year to 2021
+      Qt Designer: Slow down wheel scrolling of the widget box
+      Qt Designer: Fix saving of item view header visibility on page based containers
+      Qt Designer: Fix alignment of horizontal QTableWidget headers
+      Qt Designer: Fix alignment when adding new QTableWidget columns
 
 Jani Heikkinen (2):
       Bump version
@@ -36,10 +40,12 @@ Ralf Habacker (2):
       qtpaths: Add missing location types
       Replace prefined application name by a generic name
 
-Tarja Sundqvist (3):
+Tarja Sundqvist (5):
       Update commercial license headers
       Revert "Update commercial license headers"
+      Bump version
       Merge remote-tracking branch 'origin/tqtc/lts-5.15.4' into tqtc/lts-5.15-opensource
+      Merge remote-tracking branch 'origin/tqtc/lts-5.15.5' into tqtc/lts-5.15-opensource
 
 Topi Reinio (11):
       qdoc: Avoid duplicates in \sincelist
@@ -120,6 +126,337 @@ index 69782d45f..d7b319d19 100644
      if (!m_query->exec())
          return false;
  
+diff --git a/src/designer/src/components/propertyeditor/designerpropertymanager.cpp b/src/designer/src/components/propertyeditor/designerpropertymanager.cpp
+index 27d265696..ecbc5be4a 100644
+--- a/src/designer/src/components/propertyeditor/designerpropertymanager.cpp
++++ b/src/designer/src/components/propertyeditor/designerpropertymanager.cpp
+@@ -1151,6 +1151,7 @@ void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)
+         m_fontManager.slotPropertyDestroyed(property);
+         m_brushManager.slotPropertyDestroyed(property);
+     }
++    m_alignDefault.remove(property);
+ }
+ 
+ QStringList DesignerPropertyManager::attributes(int propertyType) const
+@@ -1255,6 +1256,12 @@ QVariant DesignerPropertyManager::attributeValue(const QtProperty *property, con
+             return itIcon.value();
+     }
+ 
++    if (attribute == alignDefaultAttribute()) {
++        Qt::Alignment v = m_alignDefault.value(property,
++                                               Qt::Alignment(Qt::AlignLeading | Qt::AlignHCenter));
++        return QVariant(uint(v));
++    }
++
+     return QtVariantPropertyManager::attributeValue(property, attribute);
+ }
+ 
+@@ -1430,6 +1437,8 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
+         emit attributeChanged(property, attribute, v);
+ 
+         emit propertyChanged(property);
++    } else if (attribute == alignDefaultAttribute()) {
++        m_alignDefault[property] = Qt::Alignment(value.toUInt());
+     }
+     QtVariantPropertyManager::setAttribute(property, attribute, value);
+ }
+@@ -1477,6 +1486,16 @@ int DesignerPropertyManager::designerKeySequenceTypeId()
+     return qMetaTypeId<PropertySheetKeySequenceValue>();
+ }
+ 
++QString DesignerPropertyManager::alignDefaultAttribute()
++{
++    return QStringLiteral("alignDefault");
++}
++
++uint DesignerPropertyManager::alignDefault(const QtVariantProperty *prop)
++{
++    return prop->attributeValue(DesignerPropertyManager::alignDefaultAttribute()).toUInt();
++}
++
+ bool DesignerPropertyManager::isPropertyTypeSupported(int propertyType) const
+ {
+     switch (propertyType) {
+@@ -2184,6 +2203,16 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
+     QtVariantPropertyManager::uninitializeProperty(property);
+ }
+ 
++bool DesignerPropertyManager::resetTextAlignmentProperty(QtProperty *property)
++{
++    const auto it = m_alignDefault.constFind(property);
++    if (it == m_alignDefault.cend())
++        return false;
++    QtVariantProperty *alignProperty = variantProperty(property);
++    alignProperty->setValue(DesignerPropertyManager::alignDefault(alignProperty));
++    alignProperty->setModified(false);
++    return true;
++}
+ 
+ bool DesignerPropertyManager::resetFontSubProperty(QtProperty *property)
+ {
+diff --git a/src/designer/src/components/propertyeditor/designerpropertymanager.h b/src/designer/src/components/propertyeditor/designerpropertymanager.h
+index abc6e385c..c3f55942a 100644
+--- a/src/designer/src/components/propertyeditor/designerpropertymanager.h
++++ b/src/designer/src/components/propertyeditor/designerpropertymanager.h
+@@ -135,6 +135,7 @@ public:
+     QString valueText(const QtProperty *property) const override;
+     QIcon valueIcon(const QtProperty *property) const override;
+ 
++    bool resetTextAlignmentProperty(QtProperty *property);
+     bool resetFontSubProperty(QtProperty *property);
+     bool resetIconSubProperty(QtProperty *subProperty);
+ 
+@@ -156,6 +157,10 @@ public:
+     static bool useIdBasedTranslations()
+         { return m_IdBasedTranslations; }
+ 
++    static QString alignDefaultAttribute();
++
++    static uint alignDefault(const QtVariantProperty *prop);
++
+ public Q_SLOTS:
+     void setAttribute(QtProperty *property, const QString &attribute, const QVariant &value) override;
+     void setValue(QtProperty *property, const QVariant &value) override;
+@@ -200,6 +205,7 @@ private:
+     PropertyToPropertyMap m_propertyToAlignV;
+     PropertyToPropertyMap m_alignHToProperty;
+     PropertyToPropertyMap m_alignVToProperty;
++    QHash<const QtProperty *, Qt::Alignment> m_alignDefault;
+ 
+     QMap<QtProperty *, QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> > m_propertyToIconSubProperties;
+     QMap<QtProperty *, QPair<QIcon::Mode, QIcon::State> > m_iconSubPropertyToState;
+diff --git a/src/designer/src/components/propertyeditor/propertyeditor.cpp b/src/designer/src/components/propertyeditor/propertyeditor.cpp
+index 392f1c3f5..48a4120a9 100644
+--- a/src/designer/src/components/propertyeditor/propertyeditor.cpp
++++ b/src/designer/src/components/propertyeditor/propertyeditor.cpp
+@@ -1187,6 +1187,9 @@ void PropertyEditor::slotResetProperty(QtProperty *property)
+     if (m_propertyManager->resetIconSubProperty(property))
+         return;
+ 
++    if (m_propertyManager->resetTextAlignmentProperty(property))
++        return;
++
+     if (!m_propertyToGroup.contains(property))
+         return;
+ 
+diff --git a/src/designer/src/components/taskmenu/itemlisteditor.cpp b/src/designer/src/components/taskmenu/itemlisteditor.cpp
+index 8aca0916d..700cf136c 100644
+--- a/src/designer/src/components/taskmenu/itemlisteditor.cpp
++++ b/src/designer/src/components/taskmenu/itemlisteditor.cpp
+@@ -116,12 +116,17 @@ static QStringList c2qStringList(const char * const in[])
+     return out;
+ }
+ 
+-void AbstractItemEditor::setupProperties(PropertyDefinition *propList)
++void AbstractItemEditor::setupProperties(const PropertyDefinition *propList,
++                                         Qt::Alignment alignDefault)
+ {
+     for (int i = 0; propList[i].name; i++) {
+         int type = propList[i].typeFunc ? propList[i].typeFunc() : propList[i].type;
+         int role = propList[i].role;
+         QtVariantProperty *prop = m_propertyManager->addProperty(type, QLatin1String(propList[i].name));
++        if (role == Qt::TextAlignmentRole) {
++            prop->setAttribute(DesignerPropertyManager::alignDefaultAttribute(),
++                               QVariant(uint(alignDefault)));
++        }
+         Q_ASSERT(prop);
+         if (role == Qt::ToolTipPropertyRole || role == Qt::WhatsThisPropertyRole)
+             prop->setAttribute(QStringLiteral("validationMode"), ValidationRichText);
+@@ -148,9 +153,11 @@ void AbstractItemEditor::setupObject(QWidget *object)
+     m_editorFactory->setFormWindowBase(fwb);
+ }
+ 
+-void AbstractItemEditor::setupEditor(QWidget *object, PropertyDefinition *propList)
++void AbstractItemEditor::setupEditor(QWidget *object,
++                                     const PropertyDefinition *propList,
++                                     Qt::Alignment alignDefault)
+ {
+-    setupProperties(propList);
++    setupProperties(propList, alignDefault);
+     setupObject(object);
+ }
+ 
+@@ -208,6 +215,9 @@ void AbstractItemEditor::resetProperty(QtProperty *property)
+     if (m_propertyManager->resetIconSubProperty(property))
+         return;
+ 
++    if (m_propertyManager->resetTextAlignmentProperty(property))
++        return;
++
+     BoolBlocker block(m_updatingBrowser);
+ 
+     QtVariantProperty *prop = m_propertyManager->variantProperty(property);
+@@ -243,15 +253,18 @@ void AbstractItemEditor::updateBrowser()
+     for (QtVariantProperty *prop : qAsConst(m_properties)) {
+         int role = m_propertyToRole.value(prop);
+         QVariant val = getItemData(role);
++
++        bool modified = false;
+         if (!val.isValid()) {
+             if (role == ItemFlagsShadowRole)
+                 val = QVariant::fromValue(defaultItemFlags());
+             else
+                 val = QVariant(int(prop->value().userType()), nullptr);
+-            prop->setModified(false);
+         } else {
+-            prop->setModified(true);
++            modified = role != Qt::TextAlignmentRole
++                || val.toUInt() != DesignerPropertyManager::alignDefault(prop);
+         }
++        prop->setModified(modified);
+         prop->setValue(val);
+     }
+ 
+@@ -296,9 +309,11 @@ ItemListEditor::ItemListEditor(QDesignerFormWindowInterface *form, QWidget *pare
+     connect(iconCache(), &DesignerIconCache::reloaded, this, &AbstractItemEditor::cacheReloaded);
+ }
+ 
+-void ItemListEditor::setupEditor(QWidget *object, PropertyDefinition *propList)
++void ItemListEditor::setupEditor(QWidget *object,
++                                 const PropertyDefinition *propList,
++                                 Qt::Alignment alignDefault)
+ {
+-    AbstractItemEditor::setupEditor(object, propList);
++    AbstractItemEditor::setupEditor(object, propList, alignDefault);
+ 
+     if (ui.listWidget->count() > 0)
+         ui.listWidget->setCurrentRow(0);
+@@ -319,6 +334,8 @@ void ItemListEditor::on_newListItemButton_clicked()
+ 
+     QListWidgetItem *item = new QListWidgetItem(m_newItemText);
+     item->setData(Qt::DisplayPropertyRole, QVariant::fromValue(PropertySheetStringValue(m_newItemText)));
++    if (m_alignDefault != 0)
++        item->setTextAlignment(Qt::Alignment(m_alignDefault));
+     item->setFlags(item->flags() | Qt::ItemIsEditable);
+     if (row < ui.listWidget->count())
+         ui.listWidget->insertItem(row, item);
+@@ -466,6 +483,16 @@ void ItemListEditor::updateEditor()
+     else
+         m_propertyBrowser->clear();
+ }
++
++uint ItemListEditor::alignDefault() const
++{
++    return m_alignDefault;
++}
++
++void ItemListEditor::setAlignDefault(uint newAlignDefault)
++{
++    m_alignDefault = newAlignDefault;
++}
+ } // namespace qdesigner_internal
+ 
+ QT_END_NAMESPACE
+diff --git a/src/designer/src/components/taskmenu/itemlisteditor.h b/src/designer/src/components/taskmenu/itemlisteditor.h
+index 97bcb19d9..c7dee8764 100644
+--- a/src/designer/src/components/taskmenu/itemlisteditor.h
++++ b/src/designer/src/components/taskmenu/itemlisteditor.h
+@@ -86,9 +86,11 @@ private slots:
+ 
+ protected:
+     virtual int defaultItemFlags() const = 0;
+-    void setupProperties(PropertyDefinition *propDefs);
++    void setupProperties(const PropertyDefinition *propList,
++                         Qt::Alignment alignDefault = Qt::AlignLeading | Qt::AlignVCenter);
+     void setupObject(QWidget *object);
+-    void setupEditor(QWidget *object, PropertyDefinition *propDefs);
++    void setupEditor(QWidget *object, const PropertyDefinition *propDefs,
++                     Qt::Alignment alignDefault = Qt::AlignLeading | Qt::AlignVCenter);
+     void injectPropertyBrowser(QWidget *parent, QWidget *widget);
+     void updateBrowser();
+     virtual void setItemData(int role, const QVariant &v) = 0;
+@@ -112,12 +114,16 @@ class ItemListEditor: public AbstractItemEditor
+ public:
+     explicit ItemListEditor(QDesignerFormWindowInterface *form, QWidget *parent);
+ 
+-    void setupEditor(QWidget *object, PropertyDefinition *propDefs);
++    void setupEditor(QWidget *object, const PropertyDefinition *propDefs,
++                     Qt::Alignment alignDefault = Qt::AlignLeading | Qt::AlignVCenter);
+     QListWidget *listWidget() const { return ui.listWidget; }
+     void setNewItemText(const QString &tpl) { m_newItemText = tpl; }
+     QString newItemText() const { return m_newItemText; }
+     void setCurrentIndex(int idx);
+ 
++    uint alignDefault() const;
++    void setAlignDefault(uint newAlignDefault);
++
+ signals:
+     void indexChanged(int idx);
+     void itemChanged(int idx, int role, const QVariant &v);
+@@ -145,6 +151,7 @@ private:
+     void setPropertyBrowserVisible(bool v);
+     void updateEditor();
+     Ui::ItemListEditor ui;
++    uint m_alignDefault = 0;
+     bool m_updating;
+     QString m_newItemText;
+ };
+diff --git a/src/designer/src/components/taskmenu/tablewidgeteditor.cpp b/src/designer/src/components/taskmenu/tablewidgeteditor.cpp
+index b5f41626c..6bf6d9faa 100644
+--- a/src/designer/src/components/taskmenu/tablewidgeteditor.cpp
++++ b/src/designer/src/components/taskmenu/tablewidgeteditor.cpp
+@@ -51,6 +51,7 @@ TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog
+ {
+     m_columnEditor = new ItemListEditor(form, this);
+     m_columnEditor->setObjectName(QStringLiteral("columnEditor"));
++    m_columnEditor->setAlignDefault(Qt::AlignCenter);
+     m_columnEditor->setNewItemText(tr("New Column"));
+     m_rowEditor = new ItemListEditor(form, this);
+     m_rowEditor->setObjectName(QStringLiteral("rowEditor"));
+@@ -136,11 +137,19 @@ TableWidgetContents TableWidgetEditor::fillContentsFromTableWidget(QTableWidget
+     tblCont.fromTableWidget(tableWidget, false);
+     tblCont.applyToTableWidget(ui.tableWidget, iconCache(), true);
+ 
+-    tblCont.m_verticalHeader.applyToListWidget(m_rowEditor->listWidget(), iconCache(), true);
+-    m_rowEditor->setupEditor(tableWidget, tableHeaderPropList);
+-
+-    tblCont.m_horizontalHeader.applyToListWidget(m_columnEditor->listWidget(), iconCache(), true);
+-    m_columnEditor->setupEditor(tableWidget, tableHeaderPropList);
++    auto *header = tableWidget->verticalHeader();
++    auto headerAlignment = header != nullptr
++            ? header->defaultAlignment() : Qt::Alignment(Qt::AlignLeading | Qt::AlignVCenter);
++    tblCont.m_verticalHeader.applyToListWidget(m_rowEditor->listWidget(), iconCache(),
++                                               true, headerAlignment);
++    m_rowEditor->setupEditor(tableWidget, tableHeaderPropList, headerAlignment);
++
++    header = tableWidget->horizontalHeader();
++    headerAlignment = header != nullptr
++        ? header->defaultAlignment() : Qt::Alignment(Qt::AlignCenter);
++    tblCont.m_horizontalHeader.applyToListWidget(m_columnEditor->listWidget(), iconCache(),
++                                                 true, headerAlignment);
++    m_columnEditor->setupEditor(tableWidget, tableHeaderPropList, headerAlignment);
+ 
+     setupEditor(tableWidget, tableItemPropList);
+     if (ui.tableWidget->columnCount() > 0 && ui.tableWidget->rowCount() > 0)
+diff --git a/src/designer/src/components/widgetbox/widgetboxtreewidget.cpp b/src/designer/src/components/widgetbox/widgetboxtreewidget.cpp
+index 054d622a0..151180313 100644
+--- a/src/designer/src/components/widgetbox/widgetboxtreewidget.cpp
++++ b/src/designer/src/components/widgetbox/widgetboxtreewidget.cpp
+@@ -50,6 +50,7 @@
+ #include <QtWidgets/qaction.h>
+ #include <QtWidgets/qactiongroup.h>
+ #include <QtWidgets/qmenu.h>
++#include <QtWidgets/qscrollbar.h>
+ 
+ #include <QtCore/qfile.h>
+ #include <QtCore/qtimer.h>
+@@ -303,7 +304,15 @@ bool WidgetBoxTreeWidget::load(QDesignerWidgetBox::LoadMode loadMode)
+         return false;
+ 
+     const QString contents = QString::fromUtf8(f.readAll());
+-    return loadContents(contents);
++    if (!loadContents(contents))
++        return false;
++    if (topLevelItemCount() > 0) {
++        // QTBUG-93099: Set the single step to the item height to have some
++        // size-related value.
++        const auto itemHeight = visualItemRect(topLevelItem(0)).height();
++        verticalScrollBar()->setSingleStep(itemHeight);
++    }
++    return true;
+ }
+ 
+ bool WidgetBoxTreeWidget::loadContents(const QString &contents)
 diff --git a/src/designer/src/designer/versiondialog.cpp b/src/designer/src/designer/versiondialog.cpp
 index 8e2e399e0..80bc2b6d2 100644
 --- a/src/designer/src/designer/versiondialog.cpp
@@ -133,6 +470,174 @@ index 8e2e399e0..80bc2b6d2 100644
  
      lbl->setWordWrap(true);
      lbl->setOpenExternalLinks(true);
+diff --git a/src/designer/src/lib/shared/qdesigner_command.cpp b/src/designer/src/lib/shared/qdesigner_command.cpp
+index 04cbfeff3..d6a6416ae 100644
+--- a/src/designer/src/lib/shared/qdesigner_command.cpp
++++ b/src/designer/src/lib/shared/qdesigner_command.cpp
+@@ -2269,16 +2269,19 @@ void ListContents::createFromListWidget(const QListWidget *listWidget, bool edit
+         m_items.append(ItemData(listWidget->item(i), editor));
+ }
+ 
+-void ListContents::applyToListWidget(QListWidget *listWidget, DesignerIconCache *iconCache, bool editor) const
++void ListContents::applyToListWidget(QListWidget *listWidget, DesignerIconCache *iconCache,
++                                     bool editor, Qt::Alignment alignmentDefault) const
+ {
+     listWidget->clear();
+ 
+     int i = 0;
+     for (const ItemData &entry : m_items) {
+-        if (!entry.isValid())
+-            new QListWidgetItem(TableWidgetContents::defaultHeaderText(i), listWidget);
+-        else
+-            listWidget->addItem(entry.createListItem(iconCache, editor));
++        auto *item = entry.isValid()
++            ? entry.createListItem(iconCache, editor)
++            : new QListWidgetItem(TableWidgetContents::defaultHeaderText(i));
++        if (item->textAlignment() == 0)
++            item->setTextAlignment(alignmentDefault);
++        listWidget->addItem(item);
+         i++;
+     }
+ }
+diff --git a/src/designer/src/lib/shared/qdesigner_command_p.h b/src/designer/src/lib/shared/qdesigner_command_p.h
+index fc20745f7..3d2bd0fb3 100644
+--- a/src/designer/src/lib/shared/qdesigner_command_p.h
++++ b/src/designer/src/lib/shared/qdesigner_command_p.h
+@@ -865,7 +865,9 @@ struct QDESIGNER_SHARED_EXPORT ListContents {
+     QTreeWidgetItem *createTreeItem(DesignerIconCache *iconCache) const;
+ 
+     void createFromListWidget(const QListWidget *listWidget, bool editor);
+-    void applyToListWidget(QListWidget *listWidget, DesignerIconCache *iconCache, bool editor) const;
++    void applyToListWidget(QListWidget *listWidget, DesignerIconCache *iconCache,
++                           bool editor,
++                           Qt::Alignment alignmentDefault = Qt::AlignLeading | Qt::AlignVCenter) const;
+     void createFromComboBox(const QComboBox *listWidget);
+     void applyToComboBox(QComboBox *listWidget, DesignerIconCache *iconCache) const;
+ 
+diff --git a/src/designer/src/lib/shared/qdesigner_propertysheet.cpp b/src/designer/src/lib/shared/qdesigner_propertysheet.cpp
+index c142ee7b1..b860c2dad 100644
+--- a/src/designer/src/lib/shared/qdesigner_propertysheet.cpp
++++ b/src/designer/src/lib/shared/qdesigner_propertysheet.cpp
+@@ -54,6 +54,7 @@
+ #include <QtWidgets/qtoolbar.h>
+ #include <QtWidgets/qmainwindow.h>
+ #include <QtWidgets/qmenubar.h>
++#include <QtWidgets/qheaderview.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+@@ -561,6 +562,7 @@ QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromNam
+         propertyTypeHash.insert(QStringLiteral("checkable"),               PropertyCheckable);
+         propertyTypeHash.insert(QStringLiteral("accessibleName"),          PropertyAccessibility);
+         propertyTypeHash.insert(QStringLiteral("accessibleDescription"),   PropertyAccessibility);
++        propertyTypeHash.insert(QStringLiteral("visible"),                 PropertyVisible);
+         propertyTypeHash.insert(QStringLiteral("windowTitle"),             PropertyWindowTitle);
+         propertyTypeHash.insert(QStringLiteral("windowIcon"),              PropertyWindowIcon);
+         propertyTypeHash.insert(QStringLiteral("windowFilePath"),          PropertyWindowFilePath);
+@@ -1066,7 +1068,22 @@ QVariant QDesignerPropertySheet::property(int index) const
+         return QVariant::fromValue(value);
+     }
+ 
+-    return metaProperty(index);
++    QVariant result =  metaProperty(index);
++    // QTBUG-49591: "visible" is only exposed for QHeaderView as a fake
++    // property ("headerVisible") for the item view. If the item view is not
++    // visible (on a page based container), check the WA_WState_Hidden instead,
++    // since otherwise false is returned when saving.
++    if (result.type() == QVariant::Bool && !result.toBool()
++        && d->m_object->isWidgetType()
++        && propertyType(index) == PropertyVisible) {
++        if (auto *hv = qobject_cast<QHeaderView *>(d->m_object)) {
++            if (auto *parent = hv->parentWidget())  {
++                if (!parent->isVisible())
++                    result = QVariant(!hv->testAttribute(Qt::WA_WState_Hidden));
++            }
++        }
++    }
++    return result;
+ }
+ 
+ QVariant QDesignerPropertySheet::metaProperty(int index) const
+diff --git a/src/designer/src/lib/shared/qdesigner_propertysheet_p.h b/src/designer/src/lib/shared/qdesigner_propertysheet_p.h
+index 49380e1ee..e066d0c4f 100644
+--- a/src/designer/src/lib/shared/qdesigner_propertysheet_p.h
++++ b/src/designer/src/lib/shared/qdesigner_propertysheet_p.h
+@@ -157,6 +157,7 @@ public:
+                         PropertyGeometry,
+                         PropertyChecked,
+                         PropertyCheckable,
++                        PropertyVisible,
+                         PropertyWindowTitle,
+                         PropertyWindowIcon,
+                         PropertyWindowFilePath,
+diff --git a/src/designer/src/lib/uilib/abstractformbuilder.cpp b/src/designer/src/lib/uilib/abstractformbuilder.cpp
+index 4d39cdb5d..48f789687 100644
+--- a/src/designer/src/lib/uilib/abstractformbuilder.cpp
++++ b/src/designer/src/lib/uilib/abstractformbuilder.cpp
+@@ -1634,24 +1634,28 @@ static void storeItemFlags(const T *item, QList<DomProperty*> *properties)
+ 
+ template<class T>
+ static void storeItemProps(QAbstractFormBuilder *abstractFormBuilder, const T *item,
+-        QList<DomProperty*> *properties)
++        QList<DomProperty*> *properties,
++        Qt::Alignment defaultAlign = Qt::AlignLeading | Qt::AlignVCenter)
+ {
+     static const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
+     FriendlyFB * const formBuilder = static_cast<FriendlyFB *>(abstractFormBuilder);
+ 
+     DomProperty *p;
+-    QVariant v;
+ 
+     for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles)
+         if ((p = formBuilder->saveText(it.second, item->data(it.first.second))))
+             properties->append(p);
+ 
+-    for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles)
+-        if ((v = item->data(it.first)).isValid() &&
+-            (p = variantToDomProperty(abstractFormBuilder,
+-                static_cast<const QMetaObject *>(&QAbstractFormBuilderGadget::staticMetaObject),
+-                it.second, v)))
++    auto *mo = static_cast<const QMetaObject *>(&QAbstractFormBuilderGadget::staticMetaObject);
++    for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles) {
++        const QVariant v = item->data(it.first);
++        const bool isModified = v.isValid()
++            && (it.first != Qt::TextAlignmentRole || v.toUInt() != uint(defaultAlign));
++        if (isModified &&
++            (p = variantToDomProperty(abstractFormBuilder, mo, it.second, v))) {
+             properties->append(p);
++        }
++    }
+ 
+     if ((p = formBuilder->saveResource(item->data(Qt::DecorationPropertyRole))))
+         properties->append(p);
+@@ -1809,11 +1813,12 @@ void QAbstractFormBuilder::saveTableWidgetExtraInfo(QTableWidget *tableWidget, D
+ 
+     // save the horizontal header
+     QVector<DomColumn *> columns;
++    auto *header = tableWidget->horizontalHeader();
+     for (int c = 0; c < tableWidget->columnCount(); c++) {
+         QList<DomProperty*> properties;
+         QTableWidgetItem *item = tableWidget->horizontalHeaderItem(c);
+         if (item)
+-            storeItemProps(this, item, &properties);
++            storeItemProps(this, item, &properties, header->defaultAlignment());
+ 
+         DomColumn *column = new DomColumn;
+         column->setElementProperty(properties);
+@@ -1823,11 +1828,12 @@ void QAbstractFormBuilder::saveTableWidgetExtraInfo(QTableWidget *tableWidget, D
+ 
+     // save the vertical header
+     QVector<DomRow *> rows;
++    header = tableWidget->verticalHeader();
+     for (int r = 0; r < tableWidget->rowCount(); r++) {
+         QList<DomProperty*> properties;
+         QTableWidgetItem *item = tableWidget->verticalHeaderItem(r);
+         if (item)
+-            storeItemProps(this, item, &properties);
++            storeItemProps(this, item, &properties, header->defaultAlignment());
+ 
+         DomRow *row = new DomRow;
+         row->setElementProperty(properties);
 diff --git a/src/linguist/Qt5LinguistToolsMacros.cmake b/src/linguist/Qt5LinguistToolsMacros.cmake
 index ab271d56a..20fb14935 100644
 --- a/src/linguist/Qt5LinguistToolsMacros.cmake
