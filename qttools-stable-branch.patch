@@ -1,3 +1,6 @@
+Albert Astals Cid (1):
+      Ensure FileAttributeSetTable is filled ordered so we get the same qch file each time
+
 Antti Kokko (2):
       Add changes file for Qt 5.15.2
       Add changes file for Qt 5.12.10
@@ -126,6 +129,21 @@ index 69782d45f..d7b319d19 100644
      if (!m_query->exec())
          return false;
  
+diff --git a/src/assistant/qhelpgenerator/helpgenerator.cpp b/src/assistant/qhelpgenerator/helpgenerator.cpp
+index feab1e2d5..cbfb82507 100644
+--- a/src/assistant/qhelpgenerator/helpgenerator.cpp
++++ b/src/assistant/qhelpgenerator/helpgenerator.cpp
+@@ -445,7 +445,9 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
+     if (filterSetId < 0)
+         return false;
+     ++filterSetId;
+-    for (int attId : qAsConst(filterAtts)) {
++    QList<int> attValues = filterAtts.values();
++    std::sort(attValues.begin(), attValues.end());
++    for (int attId : qAsConst(attValues)) {
+         m_query->prepare(QLatin1String("INSERT INTO FileAttributeSetTable "
+             "VALUES(?, ?)"));
+         m_query->bindValue(0, filterSetId);
 diff --git a/src/designer/src/components/propertyeditor/designerpropertymanager.cpp b/src/designer/src/components/propertyeditor/designerpropertymanager.cpp
 index 27d265696..ecbc5be4a 100644
 --- a/src/designer/src/components/propertyeditor/designerpropertymanager.cpp
