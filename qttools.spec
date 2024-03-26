@@ -153,7 +153,7 @@ sed -i 's/lib"/lib64"/' %{buildroot}/usr/lib64/cmake/Qt5UiTools/*
 /usr/bin/qdbus
 /usr/bin/qdbusviewer
 /usr/bin/qtdiag
-/usr/bin/qtpaths
+%exclude /usr/bin/qtpaths
 
 %files data
 %defattr(-,root,root,-)
